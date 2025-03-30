@@ -14,7 +14,7 @@ import validateotp from '@salesforce/apex/Validator.validateotp';
 import Sessioncreation from '@salesforce/apex/Sessioncontroler.Sessioncreation';
 import { NavigationMixin } from 'lightning/navigation';
 
-export default class Signauth extends NavigationMixin(LightningElement)  {
+export default class Adminauth extends NavigationMixin(LightningElement)  {
   @track timecurrent
   @track emaillist = []
   @track dataer = {FirstName: "", LastName: ""};

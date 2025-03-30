@@ -5,7 +5,7 @@ import Sessionrevalidate from '@salesforce/apex/Sessioncontroler.Sessionrevalida
 import returnemailforauth from '@salesforce/apex/Sessioncontroler.returnemailforauth';
 import { NavigationMixin } from 'lightning/navigation';
 
-export default class Homepage extends NavigationMixin(LightningElement) {
+export default class AdminHomePage extends NavigationMixin(LightningElement) {
 
     sessioninterval;
     email;
