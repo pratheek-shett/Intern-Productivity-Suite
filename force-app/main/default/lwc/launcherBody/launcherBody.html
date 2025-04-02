@@ -1,0 +1,31 @@
+<template>
+    <div class="slds-grid slds-wrap custom-container">
+
+        
+        <div class="slds-col slds-size_2-of-2 slds-medium-size_1-of-2 slds-size_1-of-2 left-section">
+
+            <div class="image-container">
+                <img src={Backgroundimage} class="background-image" alt="Background">
+                <div class="image-overlay"></div>
+                <div class="text-container">
+                    <h2>Productivity Suite</h2>
+                    <p>Manage Your Tasks Easily with Suite</p> 
+                </div>
+            </div>
+        </div>
+        
+
+        <div class="slds-col right-section">
+            <div>
+                <h2>Select Access Role</h2>
+                <lightning-combobox 
+                    options={rolesavailable} 
+                    class="rolesavailable"
+                    onchange={decidetonav}
+                    placeholder="Select Role">
+                </lightning-combobox>
+                <button disabled = {disablednext} label="Next" id="btn2" class = "slds-button slds-button_brand" onclick={navigatetointernauth}>Next</button>
+            </div>
+        </div>
+    </div>
+</template>

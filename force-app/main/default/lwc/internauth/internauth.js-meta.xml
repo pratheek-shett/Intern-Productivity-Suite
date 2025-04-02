@@ -8,6 +8,6 @@
         <target>lightning__RecordPage</target>
         <target>lightning__Tab</target>
         <target>lightningCommunity__Page</target>
-        <target>lightningCommunity__Page_Layout</target>
+        
     </targets>
 </LightningComponentBundle>
