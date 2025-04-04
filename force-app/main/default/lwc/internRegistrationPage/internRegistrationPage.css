@@ -2,8 +2,14 @@
     position: relative;
     min-height: 100vh;
     background-color: #CBCDCD;
+    padding-bottom: 2rem; /* Added bottom spacing */
 }
-
+.maintext {
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    font-size: 2rem;
+    color: #333;
+}
 /* Header Container */
 .header-container {
     height: 300px;
@@ -13,50 +19,65 @@
     z-index: 1;
 }
 
-.maintext {
-    font-family: 'Poppins', sans-serif;
-    font-weight: bold;
-    font-size: 2rem;
-    color: #333;
-}
-
-.header-img {
-    height: 200px;
-    width: auto;
-    max-width: 100%;
-    object-fit: contain;
-}
-
-/* Form Container - Overlapping */
+/* Form Container */
 .form-overlap-container {
     position: relative;
     width: 90%;
     max-width: 1200px;
-    margin: -120px auto 0; /* Negative margin creates overlap */
+    margin: -100px auto 2rem; /* Added bottom margin */
     z-index: 2;
 }
 
-/* Field Styling */
-.slds-box {
-    border: 1px solid #dddbda;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+/* File Upload Alignment */
+.file-upload-container {
+    display: flex;
+    flex-direction: row;
+    margin-top: 1.5rem; /* Extra spacing above upload fields */
 }
 
+/* Buttons Container */
+.buttons-container {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #dddbda;
+}
+
+@media (max-width: 480px) {
+
+    .maintext {
+        font-family: 'Poppins', sans-serif;
+        font-weight: bold;
+        font-size: 1.60rem;
+        color: #333;
+    }
+    .buttons-container {
+        flex-direction: row;
+        align-items: center;
+    }
+
+}
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     .header-container {
         height: auto;
         padding: 1rem;
-        flex-direction: column;
     }
     
     .form-overlap-container {
-        margin-top: -40px;
+        margin: -60px auto 2rem;
         width: 95%;
     }
     
     .slds-col {
         width: 100% !important;
+    }
+    
+    .buttons-container {
+        flex-direction: row;
+        align-items: center;
     }
     
     .header-img {
