@@ -17,7 +17,7 @@ public without sharing class Mailget {
        // for(Contact c: anmail){
             //emaillist.add(c.Email);
         //}
-        return [select Email from contact where Email = :usernameemail ];
+        return [select Email from contact where Email = :usernameemail AND Is_Admin__c = true];
 
     }
 }

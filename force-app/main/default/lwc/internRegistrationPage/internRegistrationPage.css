@@ -1,0 +1,66 @@
+.page-container {
+    position: relative;
+    min-height: 100vh;
+    background-color: #CBCDCD;
+}
+
+/* Header Container */
+.header-container {
+    height: 300px;
+    width: 100%;
+    background: #D9D9D9;
+    position: relative;
+    z-index: 1;
+}
+
+.maintext {
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    font-size: 2rem;
+    color: #333;
+}
+
+.header-img {
+    height: 200px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+/* Form Container - Overlapping */
+.form-overlap-container {
+    position: relative;
+    width: 90%;
+    max-width: 1200px;
+    margin: -120px auto 0; /* Negative margin creates overlap */
+    z-index: 2;
+}
+
+/* Field Styling */
+.slds-box {
+    border: 1px solid #dddbda;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .header-container {
+        height: auto;
+        padding: 1rem;
+        flex-direction: column;
+    }
+    
+    .form-overlap-container {
+        margin-top: -40px;
+        width: 95%;
+    }
+    
+    .slds-col {
+        width: 100% !important;
+    }
+    
+    .header-img {
+        height: 150px;
+        margin-top: 1rem;
+    }
+}

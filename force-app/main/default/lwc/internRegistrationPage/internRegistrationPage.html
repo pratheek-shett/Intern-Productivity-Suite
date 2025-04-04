@@ -1,0 +1,45 @@
+<template>
+    <div class="page-container">
+        <!-- Header Div (Register Intern + Image) -->
+        <div class="header-container slds-p-around_medium">
+            <div class="slds-grid slds-wrap slds-grid_align-spread">
+                <div class="slds-col slds-align_absolute-center">
+                    <h1 class="maintext">Register Intern</h1>
+                </div>
+                <div class="slds-col slds-align_absolute-center">
+                    <img src={AdminPageBackground} class="header-img" alt="Logo">
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Div (Overlapping Fields) -->
+        <div class="form-overlap-container">
+            <div class="slds-box slds-theme_default slds-p-around_large">
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <!-- Left Column -->
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-input label="First Name" class="slds-m-bottom_medium"></lightning-input>
+                        <lightning-input type="date" label="Date of Birth" class="slds-m-bottom_medium"></lightning-input>
+                        <lightning-input type="email" label="Email" class="slds-m-bottom_medium"></lightning-input>
+                        <lightning-input type="date" label="Intern End Date" class="slds-m-bottom_medium"></lightning-input>
+                        <lightning-textarea label="Complete Address" class="slds-m-bottom_medium"></lightning-textarea>
+                        <lightning-file-upload label="Upload Files" accept="image/*" class="slds-m-bottom_medium" 
+                            data-id="photo-upload"></lightning-file-upload>
+                        <lightning-button variant="brand" label="Submit" class="slds-m-top_medium"></lightning-button>
+                    </div>
+                    
+                    <!-- Right Column -->
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-input label="Last Name" class="slds-m-bottom_medium"></lightning-input>
+                        <lightning-input type="tel" label="Phone" class="slds-m-bottom_medium"></lightning-input>
+                        <lightning-input type="date" label="Date of Joining" class="slds-m-bottom_medium"></lightning-input>
+                        <lightning-combobox label="Designation" options={designationOptions} class="slds-m-bottom_medium"></lightning-combobox>
+                        <lightning-file-upload label="Upload Files" accept=".pdf,.jpg,.png" class="slds-m-bottom_medium" 
+                            data-id="govt-id-upload"></lightning-file-upload>
+                        <lightning-button variant="neutral" label="Cancel" class="slds-m-top_medium"></lightning-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
