@@ -29,11 +29,11 @@
 }
 
 /* File Upload Alignment */
-.file-upload-container {
+.file-upload-row {
     display: flex;
     flex-direction: row;
-    margin-top: 1.5rem; /* Extra spacing above upload fields */
 }
+
 
 /* Buttons Container */
 .buttons-container {
@@ -57,19 +57,38 @@
         flex-direction: row;
         align-items: center;
     }
+    .slds-col {
+        width: 100% !important;
+    }
+
+    .file-upload-row {
+        flex-direction: column;
+    }
+    
+    .file-upload-row .slds-col {
+        width: 100% !important;
+        margin-bottom: 1rem;
+    }
 
 }
 /* Mobile Responsiveness */
-@media (max-width: 768px) {
+@media (min-width: 481px) and (max-width: 1023px) {
     .header-container {
         height: auto;
         padding: 1rem;
     }
     
+    .file-upload-row {
+        flex-direction: row !important;
+    }
+    .file-upload-row .slds-col {
+        width: 50% !important;
+    }
     .form-overlap-container {
         margin: -60px auto 2rem;
         width: 95%;
     }
+    
     
     .slds-col {
         width: 100% !important;
