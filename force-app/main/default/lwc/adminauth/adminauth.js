@@ -44,7 +44,7 @@ navigatetohome(e) {
   this[NavigationMixin.Navigate]({
     type: 'standard__webPage',
     attributes: {
-        url: '/jcdlkjcl' 
+        url: '/registerintern' 
     }
   });
   

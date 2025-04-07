@@ -11,7 +11,7 @@ public without sharing class SessionManager {
             useremail__c = getemail,
             Start_Time__c = DateTime.now(),
             Last_Refresh__c = DateTime.now(),
-            End_Time__c = DateTime.now().addminutes(5),
+            End_Time__c = DateTime.now().addminutes(1),
             Is_Active__c = true
         );
         insert usersession;
@@ -37,7 +37,7 @@ public without sharing class SessionManager {
             }
              //to check page response or activeness
             sessionend.Last_Refresh__c = Datetime.now();
-            sessionend.End_Time__c = DateTime.now().addMinutes(5);
+            sessionend.End_Time__c = DateTime.now().addMinutes(1);
             update sessionend;
             return true;
 
