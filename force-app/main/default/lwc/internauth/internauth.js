@@ -5,7 +5,7 @@ import FirstName from '@salesforce/schema/Contact.FirstName';
 import noHeader from '@salesforce/resourceUrl/NoHeader';
 import HideLightningHeader from '@salesforce/resourceUrl/NoHeader';
 import { loadStyle, loadScript } from 'lightning/platformResourceLoader';
-import getemaildatafunction from '@salesforce/apex/Mailget.getemaildatafunction';
+import getemaildatafunction from '@salesforce/apex/InternMailget.getemaildatafunction';
 import sendingemail from '@salesforce/apex/Sendemail.sendingemail';
 import Field from "@salesforce/schema/AccountHistory.Field";
 import checkid from '@salesforce/apex/Validator.checkid';
@@ -45,7 +45,7 @@ navigatetohome(e) {
   this[NavigationMixin.Navigate]({
     type: 'standard__webPage',
     attributes: {
-        url: '/jcdlkjcl' 
+        url: '/internhomepage' 
     }
   });
   
@@ -114,7 +114,7 @@ navigatetohome(e) {
       // });
         const result = await getemaildatafunction({usernameemail: getdatafromuser});
         console.log('getemaildatafunction result:', result);
-        let lowerresult = result.map(item => item.Email.toLowerCase());
+        let lowerresult = result.map(item => item.Email__c.toLowerCase());
         if(lowerresult.includes(getdatafromuser)){
           this.viewenabler();
           this.firstbutton = false;
@@ -169,22 +169,30 @@ navigatetohome(e) {
 //     }
 //   }
 
-async validateotp(){
-    try{
-      const validate = await validateotp({userenterdotp: this.userenteredotp, Email: this.email});
-      if(validate === true){
-        await Sessioncreation({getemail : this.email});
-        await new Promise(resolve => setTimeout(resolve, 300));
-        this.secondbuttonlabel = "Submitted";
-        this.countdownDisplay = '';
-        this.navigatetohome();
-        return;
+async validateotp() {
+  try {
+      const validate = await validateotp({
+          userenterdotp: this.userenteredotp, 
+          Email: this.email
+      });
+      
+      if(validate === true) {
+          await Sessioncreation({getemail: this.email});
+          this.secondbuttonlabel = "Submitted";
+          this.countdownDisplay = '';
+          this.navigatetohome();
       }
-    }catch(error){
+  } catch(error) {
       console.error('Validation error:', error);
-        window.alert(error.body?.message || 'An error occurred during validation');
-
-    }
+      // Show user-friendly message
+      this.dispatchEvent(
+          new ShowToastEvent({
+              title: 'Error',
+              message: error.body?.message || 'OTP validation failed',
+              variant: 'error'
+          })
+      );
+  }
 }
   // if(! this.userenteredotp){
   //   window.alert("Please enter your OTP");

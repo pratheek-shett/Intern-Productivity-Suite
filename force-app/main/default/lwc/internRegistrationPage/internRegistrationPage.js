@@ -1,84 +1,142 @@
-import { LightningElement } from 'lwc';
+import { LightningElement, track } from 'lwc';
 import AdminPageBackground from '@salesforce/resourceUrl/AdminPageBackground';
-import IsAtLeast18YearsOld from '@salesforce/apex/GetInterRegistration.IsAtLeast18YearsOld';
+import uploadFile from '@salesforce/apex/GetInterRegistration.uploadFile';
 import GetInternDetails from '@salesforce/apex/GetInterRegistration.GetInternDetails';
-import SessionBaseClass from 'c/sessionBaseClass';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-export default class InternRegistrationPage extends SessionBaseClass {
 
+export default class InternRegistrationPage extends LightningElement {
     AdminPageBackground = AdminPageBackground;
-    
+    @track photoFile;
+    @track govtIdFile;
+    @track photoBase64;
+    @track govtIdBase64;
+
     designationOptions = [
         { label: 'Intern', value: 'intern' },
         { label: 'Trainee Employee', value: 'trainee' }
     ];
 
+    handlePhotoUpload(event) {
+        const file = event.target.files[0];
+        if (file) {
+            this.photoFile = file;
+            this.encodeFileToBase64(file).then(result => {
+                this.photoBase64 = result;
+            });
+        }
+    }
+
+    handleGovtIdUpload(event) {
+        const file = event.target.files[0];
+        if (file) {
+            this.govtIdFile = file;
+            this.encodeFileToBase64(file).then(result => {
+                this.govtIdBase64 = result;
+            });
+        }
+    }
+
+    encodeFileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                const base64String = reader.result.split(',')[1];
+                resolve(base64String);
+            };
+            reader.onerror = error => reject(error);
+            reader.readAsDataURL(file);
+        });
+    }
+
     async handleSubmit() {
         try {
-
-            // Get all input fields
             const inputFields = this.template.querySelectorAll(
                 'lightning-input, lightning-combobox, lightning-textarea'
             );
             
-            // Validate all required fields
             let allValid = true;
             inputFields.forEach(field => {
-
                 if(field.required && !field.value) {
                     field.reportValidity();
                     allValid = false;
                 }
             });
+
+            if(!allValid) return;
             
-            if(!allValid) {
-                return;
-            }
-            
-            // Prepare form data
             let formData = {};
             inputFields.forEach(field => {
                 formData[field.name] = field.value;
             });
-            
-            // Call Apex method
-            const boolvalue = await GetInternDetails({ getinfofromui: formData });
-            if(boolvalue){
-                const event = new ShowToastEvent({
-                  title: 'Get Help',
-                  message:
-                'success',
-             });
-              this.dispatchEvent(event);
-            }else{
 
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: 'Error',
-                        message: error.body?.message || error.message,
-                        variant: 'error'
-                    })
-                );
+            // Upload files first if they exist
+            let photoFileId, govtIdFileId;
+            
+            if (this.photoFile) {
+                photoFileId = await this.uploadFileToServer(this.photoFile, this.photoFile.name, 'Profile Photo');
+                formData.photofile = photoFileId;
             }
             
-            // Reset form after successful submission
-            this.resetForm();
+            if (this.govtIdFile) {
+                govtIdFileId = await this.uploadFileToServer(this.govtIdFile, this.govtIdFile.name, 'Government ID');
+                formData.govtidfile = govtIdFileId;
+            }
             
+            const boolvalue = await GetInternDetails({ getinfofromui: formData });
+            
+            if(boolvalue) {
+                this.showToast('SUCCESS', 'Registration submitted successfully!', 'success');
+                this.resetForm();
+            } else {
+                this.showToast('Error', 'Registration submitted successfully!', 'error')
+            }
         } catch(error) {
-            console.error(error);
+            this.dispatchEvent(new ShowToastEvent({
+                title: 'Error',
+                message: error.body?.message || error.message,
+                variant: 'error'
+            }));
+        }
+    }
+
+    async uploadFileToServer(file, fileName, fileDescription) {
+        try {
+            const result = await uploadFile({
+                base64Data: await this.encodeFileToBase64(file),
+                fileName: fileName,
+                fileDescription: fileDescription
+            });
+            return result;
+        } catch (error) {
+            throw new Error('File upload failed: ' + error.message);
         }
     }
 
     resetForm() {
         const inputFields = this.template.querySelectorAll(
-            'lightning-input, lightning-combobox, lightning-textarea'
+            'lightning-input, lightning-combobox, lightning-textarea, input[type="file"]'
         );
         inputFields.forEach(field => {
             field.value = '';
         });
+        this.photoFile = null;
+        this.govtIdFile = null;
+        this.photoBase64 = null;
+        this.govtIdBase64 = null;
     }
 
     handleCancel() {
         this.resetForm();
+    }
+
+    showToast(title, message, variant) {
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title,
+                message,
+                variant,
+                mode: 'dismissable'
+            })
+        );
     }
 }

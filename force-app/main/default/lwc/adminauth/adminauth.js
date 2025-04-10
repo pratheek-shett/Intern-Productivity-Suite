@@ -147,7 +147,8 @@ navigatetohome(e) {
     async otpgenerated() {  //!!!  SERVER END !!
         // const randomnumber = Math.random()*9999;
         try{
-           generateotp({email: this.email});
+          const otp =  generateotp({email: this.email});
+          console.log(otp);
         }catch(error){
             window.alert(error.body.message);
             return;
