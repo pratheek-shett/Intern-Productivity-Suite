@@ -10,23 +10,17 @@ export default class CustomHeader extends LightningElement {
     }
 
     handleMenuSelect(event) {
+        const url = event.target.getAttribute('href');
         const selectedvalue = event.detail.value;
         this.showMobileMenu = false;
 
-        switch(selectedvalue){
-            case 'dashboard' : this[NavigationMixin.Navigate]({
+        if(url === '/smallscreenprofile'){
+            this[NavigationMixin.Navigate]({
                 type: 'standard__webPage',
                 attributes: {
-                    url: '/dashboard'
+                    url: '/smallscreenprofile'
                 }
             });
-            break;
-            case 'mytask':
-                // Add navigation for MyTask
-                break;
-            case 'trackleave':
-                // Add navigation for Track Leave
-                break;
         }
     }
 }
