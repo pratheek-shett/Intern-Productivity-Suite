@@ -1,38 +1,33 @@
-<template >
-    <div class="container-parent">
-        <div class="slds-col slds-size_1-of-2 left-section">
-        <div class="image-container">
-            <img src={Backgroundimage} class="background-image" alt="Background">
-            <div class="image-overlay"></div>
-            <div class="text-container">
-                <h2>Hello.. Intern</h2>
-                <p>Manage Your Tasks Easily with Suite</p> 
+<template>
+    <div class="container-parent slds-grid slds-wrap">
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 left-section">
+            <div class="image-container">
+                <img src={Backgroundimage} class="background-image" alt="Background">
+                <div class="image-overlay"></div>
+                <div class="text-container">
+                    <h2>Hello.. Intern</h2>
+                    <p>Manage Your Tasks Easily with Suite</p> 
+                </div>
             </div>
-          </div>
-     </div>
-
-
-
-     <div class = "container-right" >
-
-        <div  class = "right-data-container">
-            <div class = "top-content">
-            <h1 class="title"> Sign In </h1>
-        <h1 class = "subtitle"> Provide your registered email address </h1>
         </div>
-     <!-- <lightning-card class = "slds-text-align_center custom-card" title = "Authentication"> -->
 
-        
-        <input disabled = {buttondisable}  name = "emailid" placeholder="Username" class = "slds-form-element" value = {email} onchange={runfunc}>
-        <input if:true ={showotpfield} name = "name" class = "slds-form-element" placeholder="Email OTP" onchange={runfunc}>
-        <button  lwc:if = {firstbutton}  id="btn1" class = "slds-button slds-button_brand" onclick={btnclick} > {buttonlabel} </button>
-        <button lwc:else label={secondbuttonlabel} id="btn2" class = "slds-button slds-button_brand" onclick={submitdata}> {secondbuttonlabel} </button>
-     <div class = "countinfotpdiv">
-        <button  id="btn3" if:true = {showotpfield} class = "slds-button slds-button_otp lgc-bg-inverse" disabled = {resendotpbtnvisibility} name = "resendotp" label = "Resend OTP" onclick = {resendotp}> Resend OTP </button>
-        <h1 class = "countdown">{countdownDisplay}</h1>
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 container-right">
+            <div class="right-data-container">
+                <div class="top-content">
+                    <h1 class="title">Sign In</h1>
+                    <h1 class="subtitle">Provide your registered email address</h1>
+                </div>
+                
+                <input disabled={buttondisable} name="emailid" placeholder="Username" class="slds-form-element" value={email} onchange={runfunc}>
+                <input if:true={showotpfield} name="name" class="slds-form-element" placeholder="Email OTP" onchange={runfunc}>
+                <button lwc:if={firstbutton} id="btn1" class="slds-button slds-button_brand" onclick={btnclick}>{buttonlabel}</button>
+                <button lwc:else label={secondbuttonlabel} id="btn2" class="slds-button slds-button_brand" onclick={submitdata}>{secondbuttonlabel}</button>
+                
+                <div class="countinfotpdiv">
+                    <button id="btn3" if:true={showotpfield} class="slds-button slds-button_otp" disabled={resendotpbtnvisibility} name="resendotp" onclick={resendotp}>Resend OTP</button>
+                    <span class="countdown">{countdownDisplay}</span>
+                </div>
+            </div>
+        </div>
     </div>
-    </div>
-    <!-- </lightning-card> -->
-</div>
-</div>
-</template> 
+</template>

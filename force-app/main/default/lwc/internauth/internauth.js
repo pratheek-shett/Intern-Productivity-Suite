@@ -41,7 +41,11 @@ export default class Internauth extends NavigationMixin(LightningElement)  {
 Backgroundimage = LandingImage;
  
 //navigates to the home page
+
+
 navigatetohome(e) {
+  
+  sessionStorage.setItem('interndata', e);
   this[NavigationMixin.Navigate]({
     type: 'standard__webPage',
     attributes: {
@@ -148,7 +152,9 @@ navigatetohome(e) {
     async otpgenerated() {  //!!!  SERVER END !!
         // const randomnumber = Math.random()*9999;
         try{
-           generateotp({email: this.email});
+          const value = generateotp({email: this.email});
+          console.log('otp value', value);
+        
         }catch(error){
             window.alert(error.body.message);
             return;
@@ -172,7 +178,7 @@ navigatetohome(e) {
 async validateotp() {
   try {
       const validate = await validateotp({
-          userenterdotp: this.userenteredotp, 
+          userenterdotp: this.userenteredotp,
           Email: this.email
       });
       
@@ -180,7 +186,7 @@ async validateotp() {
           await Sessioncreation({getemail: this.email});
           this.secondbuttonlabel = "Submitted";
           this.countdownDisplay = '';
-          this.navigatetohome();
+          this.navigatetohome(this.email);
       }
   } catch(error) {
       console.error('Validation error:', error);

@@ -1,5 +1,6 @@
 public without sharing class InternMailget {
     
+    
     @AuraEnabled(cacheable = true)
     public static List<sObject> getemaildatafunction(String usernameemail) {
         List<String> emaillist = new List<String>();
@@ -20,4 +21,9 @@ public without sharing class InternMailget {
         return [select Email__c from Intern_Management_c__c where Email__c =:usernameemail];
 
     }
+
+    
+    
+
+
 }

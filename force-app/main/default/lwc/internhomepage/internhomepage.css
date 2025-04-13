@@ -1,0 +1,96 @@
+.page-container {
+    position: relative;
+    min-height: 100vh;
+    background-color: white;
+    padding-bottom: 2rem; /* Added bottom spacing */
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('/resource/PoppinsBold.ttf') format('ttf');
+    font-weight: 700;
+}
+
+
+.greetingtext {
+    padding-top: 28px;
+    font-size: 1.125rem;     
+    font-weight: 400;        
+    margin-bottom: 0.25rem;  
+    color: #585858;          
+}
+
+.pagename {
+    font-size: 1.75rem;      
+    font-weight: 700;        
+    color: #000000;          
+    margin: 0;               
+}
+
+.profilepic{
+    padding-top: 28px;
+}
+
+.profile-avatar {
+    cursor: pointer;
+}
+
+.slds-modal__container {
+    max-width: 600px;
+    width: 90%;
+}
+
+.slds-text-title {
+    color: #706e6b;
+    font-size: 0.75rem;
+}
+
+/* Center the avatar and improve UI */
+.profile-modal-container {
+    max-width: 600px;
+    width: 90%;
+}
+
+.avatar-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.centered-avatar {
+    --sds-c-avatar-sizing-border: 3px solid #0176d3;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.remaining-days {
+    background-color: #f3f3f3;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    color: #0176d3;
+    font-weight: bold;
+}
+
+.details-section {
+    background: white;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 1.5rem;
+}
+
+.section-title {
+    color: #2e2e2e;
+    border-bottom: 1px solid #dddbda;
+    padding-bottom: 0.5rem;
+}
+
+.slds-text-title {
+    color: #706e6b;
+    font-size: 0.8125rem;
+    font-weight: 700;
+}
+
+.slds-text-body_regular {
+    color: #080707;
+    font-size: 0.9375rem;
+}

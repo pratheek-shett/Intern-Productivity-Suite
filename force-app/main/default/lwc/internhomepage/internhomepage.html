@@ -1,0 +1,103 @@
+<template>
+    <c-navigationbar></c-navigationbar>
+
+    <div class="slds-p-horizontal_medium slds-p-top_medium page-container">
+        <div class="slds-grid slds-grid_align-spread slds-align_center">
+            <!-- Left side text -->
+            <div>
+                <h1 class="greetingtext">Hello {firstname},</h1>
+                <h2 class="pagename">Dashboard</h2>
+            </div>
+            
+            <!-- Right side profile -->
+            <lightning-avatar
+                src={profileurl} 
+                fallback-icon-name="standard:user"
+                size="medium"
+                onclick={handleAvatarClick}
+                variant="circle"
+                class="slds-m-left_medium slds-show_large profilepic">
+            </lightning-avatar>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <template if:true={showProfileModal}>
+        <section role="dialog" tabindex="-1" aria-modal="true" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container profile-modal-container">
+                <!-- Modal Header -->
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close" onclick={closeModal}>
+                        <lightning-icon icon-name="utility:close" size="small"></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 class="slds-text-heading_medium">Profile Details</h2>
+                </header>
+                
+                <!-- Modal Body -->
+                <div class="slds-modal__content slds-p-around_medium">
+                    <!-- Centered Avatar -->
+                    <div class="avatar-container slds-m-bottom_medium">
+                        <lightning-avatar
+                            src={profileurl} 
+                            fallback-icon-name="standard:user"
+                            size="large"
+                            variant="circle"
+                            class="centered-avatar">
+                        </lightning-avatar>
+                    </div>
+    
+                    <!-- Remaining Days -->
+                    <div class="slds-text-heading_large slds-m-bottom_medium slds-text-align_center remaining-days">
+                        Remaining Days: {remainingDays}
+                    </div>
+    
+                    <!-- Personal Details Section -->
+                    <div class="details-section slds-m-bottom_large">
+                        <h3 class="slds-text-heading_small slds-m-bottom_small section-title">Personal Details</h3>
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                <div class="slds-text-title">Full Name</div>
+                                <div class="slds-text-body_regular">{profiledata.First_Name__c} {profiledata.Last_Name__c}</div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                <div class="slds-text-title">Date of Birth</div>
+                                <div class="slds-text-body_regular">{formattedDob}</div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                <div class="slds-text-title">Phone</div>
+                                <div class="slds-text-body_regular">{profiledata.Phone__c}</div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                <div class="slds-text-title">Email</div>
+                                <div class="slds-text-body_regular">{profiledata.Email__c}</div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
+                                <div class="slds-text-title">Address</div>
+                                <div class="slds-text-body_regular">{profiledata.Address__c}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="details-section">
+                        <h3 class="slds-text-heading_small slds-m-bottom_small section-title">Professional Details</h3>
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                <div class="slds-text-title">Designation</div>
+                                <div class="slds-text-body_regular">{profiledata.Designation__c}</div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                <div class="slds-text-title">Joining Date</div>
+                                <div class="slds-text-body_regular">{formattedJoiningDate}</div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                <div class="slds-text-title">End Date</div>
+                                <div class="slds-text-body_regular">{formattedEndDate}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>
