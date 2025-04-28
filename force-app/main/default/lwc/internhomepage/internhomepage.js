@@ -1,10 +1,11 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, track,api } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
-import getInternProfile from '@salesforce/apex/Internprofiledetails.getInternProfile'; //getfirstname
+import getInternProfile from '@salesforce/apex/Internprofiledetails.getInternProfile'; 
+import getProfileImageUrl from '@salesforce/apex/Internprofiledetails.getProfileImageUrl';
 
 
 export default class Internhomepage extends NavigationMixin(LightningElement) {
-
+    imageurl = 'https://mitmanipal3-dev-ed.develop.my.salesforce.com/sfc/p/WU00000FgGe1/a/WU0000004pQX/_ZQOC0pksg3hpZ1jystAtyYSThyvE.h72gtMqJvElq8';
     @track welcomeName; 
     @track isLoading = true;
     @track showProfileModal = false;
@@ -12,6 +13,7 @@ export default class Internhomepage extends NavigationMixin(LightningElement) {
     @track firstname;
     @track profiledata = {};
     @track profileurl;
+    @track profilePictureId;
     @track formattedDob = '';
     @track formattedJoiningDate = '';
     @track formattedEndDate = '';
@@ -20,9 +22,7 @@ export default class Internhomepage extends NavigationMixin(LightningElement) {
     async connectedCallback(){
         const emailid = sessionStorage.getItem('interndata')?.trim();
 
-      
-
-        console.log('Session email:', emailid); 
+        console.log('Session email:', emailid);
 
         if (emailid) {
             getInternProfile({ email: emailid })
@@ -30,6 +30,12 @@ export default class Internhomepage extends NavigationMixin(LightningElement) {
                     if (result) {
                         this.profiledata = result;
                         this.firstname = result.First_Name__c;
+                        this.profilePictureId  = result.Profile_Picture_ID__c;
+    
+
+                        if(this.profilePictureId){
+                           this.fetchProfileImage();
+                        }
                         this.calculateRemainingDays(result.End_Date__c);
                         this.formatDates(result);
                     } else {
@@ -59,6 +65,23 @@ calculateRemainingDays(endDate) {
         const today = new Date();
         const end = new Date(endDate);
         this.remainingDays = Math.ceil((end - today) / (1000 * 60 * 60 * 24));
+    }
+}
+
+
+fetchProfileImage() {
+    if (this.profilePictureId) {
+        console.log('profile info' + this.profilePictureId);
+        getProfileImageUrl({ contentDocumentId: this.profilePictureId })
+            .then(url => {
+                console.log('URL:', url);
+                if (url) {
+                    this.profileurl = url;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching profile image:', error);
+            });
     }
 }
 

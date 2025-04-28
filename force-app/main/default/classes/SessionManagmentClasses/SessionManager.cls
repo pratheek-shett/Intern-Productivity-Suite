@@ -65,7 +65,13 @@ public without sharing class SessionManager {
     }
 
     public static String returnemail(){
-        return [select useremail__c from User_Session__c where is_active__c = true limit 1].useremail__c;
+        List<User_Session__c> sessions = [SELECT useremail__c FROM User_Session__c WHERE Is_Active__c = true LIMIT 1];
+        if (!sessions.isEmpty()) {
+            return sessions[0].useremail__c;
+        } else {
+            return null;
+        }
+        
     }
 
     

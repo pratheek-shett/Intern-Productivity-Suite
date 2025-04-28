@@ -1,8 +1,8 @@
 import { LightningElement } from 'lwc';
-import SessionBasecClass from 'c/sessionBasecClass';
+import SessionBaseClass from 'c/sessionBaseClass';
 import { NavigationMixin } from 'lightning/navigation';
 
-export default class AdminHomePage extends SessionBasecClass {
+export default class AdminHomePage extends SessionBaseClass {
 
 
     connectedCallback() {

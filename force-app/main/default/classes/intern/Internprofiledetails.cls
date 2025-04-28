@@ -18,4 +18,26 @@ public without sharing class Internprofiledetails {
             LIMIT 1
         ];
     }
+
+    @AuraEnabled(cacheable=true)
+    public static String getProfileImageUrl(String contentDocumentId) {
+    if (String.isBlank(contentDocumentId)) return null;
+    
+    List<ContentVersion> versions = [
+        SELECT Id, VersionData, ContentDocumentId 
+        FROM ContentVersion 
+        WHERE ContentDocumentId = :contentDocumentId 
+        AND IsLatest = true
+        LIMIT 1
+    ];
+    
+    if (!versions.isEmpty()) {
+        System.debug('version id' + versions[0].Id);
+        return '/sfc/servlet.shepherd/version/renditionDownload?rendition=THUMB720BY480&versionId=' + versions[0].Id;
+
+
+    }
+    return null;
+}
+
 }

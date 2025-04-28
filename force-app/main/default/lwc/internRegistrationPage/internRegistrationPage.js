@@ -1,6 +1,7 @@
 import { LightningElement, track } from 'lwc';
 import AdminPageBackground from '@salesforce/resourceUrl/AdminPageBackground';
 import uploadFile from '@salesforce/apex/GetInterRegistration.uploadFile';
+import SessionBaseClass from 'c/sessionBaseClass';
 import GetInternDetails from '@salesforce/apex/GetInterRegistration.GetInternDetails';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
@@ -11,6 +12,23 @@ export default class InternRegistrationPage extends LightningElement {
     @track photoBase64;
     @track govtIdBase64;
 
+
+    // connectedCallback() {
+    //     super.connectedCallback();
+    // }
+
+    // disconnectedCallback(){
+    //     super.disconnectedCallback();
+    // }
+
+    showNotification() {
+        const evt = new ShowToastEvent({
+          title: 'Intern Registration',
+          message: 'Registration submitted successfully!',
+          variant: 'success',
+        });
+        this.dispatchEvent(evt);
+      }
     designationOptions = [
         { label: 'Intern', value: 'intern' },
         { label: 'Trainee Employee', value: 'trainee' }
@@ -85,8 +103,9 @@ export default class InternRegistrationPage extends LightningElement {
             const boolvalue = await GetInternDetails({ getinfofromui: formData });
             
             if(boolvalue) {
-                this.showToast('SUCCESS', 'Registration submitted successfully!', 'success');
+                
                 this.resetForm();
+                this.showNotification();
             } else {
                 this.showToast('Error', 'Registration submitted successfully!', 'error')
             }

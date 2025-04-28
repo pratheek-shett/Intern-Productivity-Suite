@@ -1,0 +1,45 @@
+<template>
+    <header class="slds-p-around_medium custom-header slds-grid slds-grid_align-spread">
+        <div class="slds-col">
+            <h1>novigo</h1>
+        </div>
+        
+        <!-- Desktop Navigation -->
+        <nav class="slds-col slds-show_large">
+            <ul class="slds-grid slds-grid_vertical-align-center slds-gutters">
+                <li><a href="#" class="slds-text-link_reset slds-p-horizontal_small">Dashboard</a></li>
+                <li><a href="#" class="slds-text-link_reset slds-p-horizontal_small">Intern Management</a></li>
+                <li><a href="#" class="slds-text-link_reset slds-p-horizontal_small">Task Management</a></li>
+                <li><a href="#" class="slds-text-link_reset slds-p-horizontal_small">Leave Requests</a></li>
+            </ul>
+        </nav>
+        
+        <!-- Mobile Menu Button -->
+        <div class="slds-col slds-hide_large slds-text-align_right">
+            <button class="slds-button slds-button_icon slds-button_icon-inverse" 
+                    title="Menu" 
+                    onclick={toggleMenu}>
+                    <lightning-icon icon-name="utility:rows"  variant="bare" size="small"></lightning-icon>
+                <span class="slds-assistive-text">Menu</span>
+            </button>
+        </div>
+    </header>
+    
+    <!-- Mobile Menu (Hidden by default) -->
+    <div if:true={showMobileMenu} class="slds-dropdown slds-dropdown_right slds-m-right_medium">
+        <ul class="slds-dropdown__list" role="menu">
+            <li class="slds-dropdown__item" role="presentation">
+                <a href="#" role="menuitem" onclick={handleMenuSelect} class="slds-text-link_reset">Dashboard</a>
+            </li>
+            <li class="slds-dropdown__item" role="presentation">
+                <a href="#" role="menuitem"  onclick={handleMenuSelect} class="slds-text-link_reset">Intern Management</a>
+            </li>
+            <li class="slds-dropdown__item" role="presentation">
+                <a href="#" role="menuitem" onclick={handleMenuSelect} class="slds-text-link_reset">Task Management</a>
+            </li>
+            <li class="slds-dropdown__item" role="presentation">
+                <a href="/smallscreenprofile" role="menuitem" onclick={handleMenuSelect} class="slds-text-link_reset">Leave Requests</a>
+            </li>
+        </ul>
+    </div>
+</template>
