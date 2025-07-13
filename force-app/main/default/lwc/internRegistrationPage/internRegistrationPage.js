@@ -40,7 +40,8 @@ export default class InternRegistrationPage extends LightningElement {
             this.photoFile = file;
             this.encodeFileToBase64(file).then(result => {
                 this.photoBase64 = result;
-            });
+            }
+        );
         }
     }
 

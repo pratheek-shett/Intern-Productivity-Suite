@@ -6,6 +6,12 @@
     padding: 0;
 }
 
+html body{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+}
 @media only screen and (max-width: 480px) {
     .custom-container {
         flex-direction: column;
@@ -168,7 +174,7 @@
     transition: all 0.2s ease; /* Smooth transitions */
 }
 
-/* Hover state */
+
 .right-section lightning-combobox:hover {
     --slds-c-input-color-border: #c9c9c9; /* Slightly darker border */
 }

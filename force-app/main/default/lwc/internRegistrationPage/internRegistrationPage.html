@@ -2,70 +2,73 @@
     <c-adminnavigationbar></c-adminnavigationbar>
     <div class="page-container">
         <!-- Header Div -->
-        <div class="header-container slds-p-around_medium">
-            <div class="slds-grid slds-wrap slds-grid_align-spread">
-                <div class="slds-col slds-align_absolute-center">
+        <div class="header-container">
+            <div class="slds-grid slds-wrap slds-grid_align-spread slds-grid_vertical-align-center">
+                <div class="slds-col slds-align_absolute-center slds-p-bottom_x-small">
                     <h1 class="maintext">Register Intern</h1>
                 </div>
                 <div class="slds-col slds-align_absolute-center">
-                    <img src={AdminPageBackground} class="header-img" alt="Logo">
+                    <img src={AdminPageBackground} class="header-img" alt="Company Logo">
                 </div>
             </div>
         </div>
 
         <!-- Form Div -->
         <div class="form-overlap-container">
-            <div class="slds-box slds-theme_default slds-p-around_large">
-                <div class="slds-grid slds-wrap slds-gutters">
-                    <!-- Left Column -->
-                    <div class="slds-col slds-size_1-of-2">
-                        <lightning-input label="First Name" name="firstname" class="slds-m-bottom_medium" required="true"></lightning-input>
-                        <lightning-input label="Last Name" name="lastname" class="slds-m-bottom_medium" required="true"></lightning-input>
-                        <lightning-input type="date" label="Date of Birth" name="dob" class="slds-m-bottom_medium" required="true"></lightning-input>
-                        <lightning-input type="email" label="Email" name="email" class="slds-m-bottom_medium" required="true"></lightning-input>
-                        <lightning-input type="tel" label="Phone" name="phone" class="slds-m-bottom_medium" required="true"></lightning-input>
-                    </div>
-                    
-                    <!-- Right Column -->
-                    <div class="slds-col slds-size_1-of-2">
-                        <lightning-input type="date" label="Date of Joining" name="doj" class="slds-m-bottom_medium" required="true"></lightning-input>
-                        <lightning-input type="date" label="Internship End Date" name="IED" class="slds-m-bottom_medium" required="true"></lightning-input>
-                        <lightning-combobox label="Designation" options={designationOptions} name="designation" class="slds-m-bottom_medium" required="true"></lightning-combobox>
-                        <lightning-textarea label="Complete Address" name="address" class="slds-m-bottom_medium" required="true"></lightning-textarea>
-                    </div>
-                    
-                    <!-- File Uploads - Together in their own row -->
-                    <div class="slds-col slds-size_1-of-1 slds-m-top_medium">
-                        <div class="slds-grid slds-wrap slds-gutters file-upload-row">
-                            <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-2 slds-small-size_1-of-1">
-                                <div class="slds-form-element">
-                                    <label class="slds-form-element__label">Profile Photo</label>
-                                    <div class="slds-form-element__control">
-                                        <input type="file" class="slds-input" 
-                                            accept="image/png, image/jpeg" 
-                                            onchange={handlePhotoUpload}>
+            <div class="slds-box slds-theme_default">
+                <form class="slds-form">
+                    <div class="slds-grid slds-wrap slds-gutters">
+                        <!-- Left Column -->
+                        <div class="slds-col slds-size_1-of-2 slds-p-right_medium">
+                            <lightning-input label="First Name" name="firstname" class="slds-m-bottom_medium" required="true"></lightning-input>
+                            <lightning-input label="Last Name" name="lastname" class="slds-m-bottom_medium" required="true"></lightning-input>
+                            <lightning-input type="date" label="Date of Birth" name="dob" class="slds-m-bottom_medium" required="true"></lightning-input>
+                            <lightning-input type="email" label="Email" name="email" class="slds-m-bottom_medium" required="true"></lightning-input>
+                            <lightning-input type="tel" label="Phone" name="phone" class="slds-m-bottom_medium" required="true"></lightning-input>
+                        </div>
+
+                        <!-- Right Column -->
+                        <div class="slds-col slds-size_1-of-2 slds-p-left_medium">
+                            <lightning-input type="date" label="Date of Joining" name="doj" class="slds-m-bottom_medium" required="true"></lightning-input>
+                            <lightning-input type="date" label="Internship End Date" name="IED" class="slds-m-bottom_medium" required="true"></lightning-input>
+                            <lightning-combobox label="Designation" options={designationOptions} name="designation" class="slds-m-bottom_medium" required="true"></lightning-combobox>
+                            <lightning-textarea label="Complete Address" name="address" class="slds-m-bottom_medium" required="true"></lightning-textarea>
+                        </div>
+
+                        <!-- File Upload Heading -->
+                        <div class="slds-col slds-size_1-of-1 slds-m-top_large">
+                            <h2 class="section-heading slds-text-title_bold">Upload Documents</h2>
+                        </div>
+
+                        <!-- File Uploads Row -->
+                        <div class="slds-col slds-size_1-of-1 slds-m-top_medium">
+                            <div class="slds-grid slds-wrap slds-gutters file-upload-row">
+                                <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-2 slds-small-size_1-of-1">
+                                    <div class="slds-form-element slds-p-bottom_medium">
+                                        <label class="slds-form-element__label" for="profile-photo">Profile Photo</label>
+                                        <div class="slds-form-element__control slds-m-top_xx-small">
+                                            <input type="file" id="profile-photo" class="slds-input custom-file-input" accept="image/png, image/jpeg" onchange={handlePhotoUpload}>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-2 slds-small-size_1-of-1">
-                                <div class="slds-form-element">
-                                    <label class="slds-form-element__label">Government ID Proof</label>
-                                    <div class="slds-form-element__control">
-                                        <input type="file" class="slds-input" 
-                                            accept=".pdf,.jpg,.png" 
-                                            onchange={handleGovtIdUpload}>
+                                <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-2 slds-small-size_1-of-1">
+                                    <div class="slds-form-element slds-p-bottom_medium">
+                                        <label class="slds-form-element__label" for="govt-id">Government ID Proof</label>
+                                        <div class="slds-form-element__control slds-m-top_xx-small">
+                                            <input type="file" id="govt-id" class="slds-input custom-file-input" accept=".pdf,.jpg,.png" onchange={handleGovtIdUpload}>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Buttons Row -->
-                <div class="buttons-container slds-size_2-of-2 slds-medium-size_2-of-2 slds-size_1-of-2 slds-m-top_large">
-                    <lightning-button variant="brand" label="Submit" onclick={handleSubmit}></lightning-button>
-                    <lightning-button variant="neutral" label="Cancel" onclick={handleCancel}></lightning-button>
-                </div>
+
+                    <!-- Buttons Row -->
+                    <div class="buttons-container slds-m-top_large">
+                        <lightning-button variant="brand" label="Submit" onclick={handleSubmit} class="slds-button_stretch"></lightning-button>
+                        <lightning-button variant="neutral" label="Cancel" onclick={handleCancel} class="slds-button_stretch"></lightning-button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

@@ -1,0 +1,36 @@
+.intern-task-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    font-family: Arial, sans-serif;
+}
+.task-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+label {
+    display: block;
+    margin-top: 1rem;
+    font-weight: bold;
+}
+input[type="url"], input[type="file"] {
+    width: 100%;
+    margin-top: 0.5rem;
+}
+.submit-btn {
+    margin-top: 1.5rem;
+    background: #0070d2;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.submit-btn:hover {
+    background: #005fb2;
+}

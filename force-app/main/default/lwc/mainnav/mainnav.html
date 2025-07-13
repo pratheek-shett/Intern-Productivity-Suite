@@ -12,17 +12,13 @@
                 <span class="nav-link">Dashboard</span>
             </div>
             
-            <div class="nav-item dropdown" onmouseenter={showDropdown} onmouseleave={hideDropdown}>
-                <span class="nav-link">Intern Management</span>
-                <div class="dropdown-menu" if:true={showInternDropdown}>
-                    <span class="dropdown-item" onclick={navigateToRegisterIntern}>Register Intern</span>
-                    <span class="dropdown-item" onclick={navigateToRegisterIntern}>View All Interns</span>
-                </div>
+            <div class="nav-item dropdown" onclick={navigateToTasks}>
+                <span class="nav-link">My Tasks</span>
                 
             </div>
             
             <div class="nav-item" onclick={navigateToTasks}>
-                <span class="nav-link">Task Management</span>
+                <span class="nav-link">Learning Resources</span>
             </div>
             
             <div class="nav-item" onclick={navigateToLeaves}>
@@ -40,11 +36,11 @@
             <div class="mobile-nav-item" onclick={navigateToDashboard}>
                 <span>Dashboard</span>
             </div>
-            <div class="mobile-nav-item" onclick={navigateToRegisterIntern}>
-                <span>Register Intern</span>
+            <div class="mobile-nav-item" onclick={navigateToTasks}>
+                <span>My Tasks</span>
             </div>
             <div class="mobile-nav-item" onclick={navigateToViewInterns}>
-                <span>View All Interns</span>
+                <span>Learning Resources</span>
             </div>
             <div class="mobile-nav-item" onclick={navigateToTasks}>
                 <span>Task Management</span>

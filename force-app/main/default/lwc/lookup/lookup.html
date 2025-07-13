@@ -1,0 +1,23 @@
+<template>
+    <div class="lookup">
+        <input
+            placeholder="Search intern..." 
+            value={searchKey} 
+            oninput={handleChange} 
+            onfocus={handleFocus} 
+            class="input"/>
+      
+            
+
+        <template lwc:if={showfield}>
+          <ul class="dropdown">
+        <template for:each={records} for:item="intern">
+            <li key={intern.Id} class="option" data-id={intern.Id} data-name={intern.FullName} onclick={handleSelect} >
+                {intern.FullName} ({intern.Email__c})
+            </li>
+        </template>
+    </ul>
+</template>
+
+    </div>
+</template>

@@ -1,0 +1,28 @@
+<template>
+    <c-mainnav></c-mainnav>
+    <div class="intern-task-container">
+        <h2>📝 My Assigned Task</h2>
+
+        <template if:true={task}>
+            <div class="task-card">
+                <h3>{task.Name}</h3>
+                <p>{task.Description__c}</p>
+                <p><strong>Due Date:</strong> {task.Due_Date__c}</p>
+                <p>{task.Resource_URL__c}</p>
+                
+
+                <label>Resource URL</label>
+                <input type="url" name="resourceUrl" value={resourceUrl} onchange={handleChange} placeholder="https://..." />
+
+                <label>Upload Document</label>
+                <input type="file" accept=".pdf,.png,.jpeg" onchange={handleFileChange} />
+
+                <button class="submit-btn" onclick={handleSubmitTask}>Submit Task ✅</button>
+            </div>
+        </template>
+
+        <template if:false={task}>
+            <p>No tasks assigned to you yet.</p>
+        </template>
+    </div>
+</template>

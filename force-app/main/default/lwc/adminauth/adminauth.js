@@ -37,8 +37,6 @@ export default class Adminauth extends NavigationMixin(LightningElement)  {
 @track emaildata = [];
 @track showotpfield = false;
 
-
- 
 //navigates to the home page
 navigatetohome(e) {
   this[NavigationMixin.Navigate]({
@@ -47,8 +45,9 @@ navigatetohome(e) {
         url: '/registerintern' 
     }
   });
-  
 }
+
+
   //GET USER INPUT DATA
   //Gets the user input and stores it in the variable
     runfunc(event) {
@@ -95,7 +94,6 @@ navigatetohome(e) {
 
 
       //checks email or not
-     
       let valid = await checkid({emailid:getdatafromuser});
       console.log('checkid result:', valid);
       if(!valid){
@@ -174,6 +172,7 @@ async validateotp(){
       const validate = await validateotp({userenterdotp: this.userenteredotp, Email: this.email});
       if(validate === true){
         await Sessioncreation({getemail : this.email});
+        sessionStorage.setItem('adminEmail', this.email);
         await new Promise(resolve => setTimeout(resolve, 300));
         this.secondbuttonlabel = "Submitted";
         this.countdownDisplay = '';
