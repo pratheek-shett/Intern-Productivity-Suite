@@ -24,6 +24,23 @@
     padding-bottom: 5px;
 
 }
+.delete-button {
+    background-color: #ffe6e6;
+    border-radius: 8px;
+    box-shadow: 0 0 4px rgba(255, 0, 0, 0.3);
+    cursor: pointer;
+    transition: 0.2s;
+    display: inline-block;
+}
+
+.delete-button:hover {
+    background-color: #ffcccc;
+    box-shadow: 0 0 6px rgba(255, 0, 0, 0.6);
+}
+
+.delete-icon {
+    fill: red;
+}
 
 .file{
     border-style: dotted;

@@ -7,6 +7,7 @@ import updateTaskRecord from '@salesforce/apex/Taskcreation.updateTask';
 import replaceFileOnTask from '@salesforce/apex/Taskcreation.replaceFileOnTask';
 import generateTaskFilePublicUrl from '@salesforce/apex/Taskcreation.generateTaskFilePublicUrl';
 import uploadAndDistributeTaskFile from '@salesforce/apex/Taskcreation.uploadAndDistributeTaskFile';
+import deltask from '@salesforce/apex/Taskcreation.deltask';
 import updateTaskWithPublicUrl from '@salesforce/apex/Taskcreation.updateTaskWithPublicUrl';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { refreshApex } from '@salesforce/apex';
@@ -34,8 +35,52 @@ export default class AssignTaskForm extends LightningElement {
     @track isLoadingFiles = false;
     @track previewUrlPublic; // Add this line to hold the ContentDistribution URL
     @track previewUrl = null;
+     @track currentPage = 1;
+    pageSize = 5;
+
+get totalPages() {
+    return Math.ceil(this.filteredTasks.length / this.pageSize);
+}
+
+get paginatedTasks() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.filteredTasks.slice(start, start + this.pageSize);
+}
+
+get paginationButtons() {
+    return Array.from({ length: this.totalPages }, (_, i) => {
+        const pageNum = i + 1;
+        return {
+            number: pageNum,
+            cssClass: pageNum === this.currentPage
+                ? 'slds-button slds-button_brand'
+                : 'slds-button slds-button_neutral'
+        };
+    });
+}
 
 
+handledeletetask(event){
+    event.preventDefault();
+    event.stopPropagation();
+    const taskid = event.target.dataset.id || event.currentTarget.dataset.id;
+     console.log('Deleting Task ID:', taskid); 
+     if (confirm('Are you sure you want to delete this task?')) {
+        deltask({ ttaskid :taskid })
+            .then(() => {
+                this.showNotification('Task deleted successfully!', 'success');
+                return refreshApex(this.wiredTaskResult);
+            })
+            .catch(error => {
+                console.error('Delete failed:', error);
+                this.showNotification('Failed to delete task', 'error');
+            });
+    }
+}
+
+handlePageChange(event) {
+    this.currentPage = parseInt(event.target.dataset.page, 10);
+}
 //     @wire(getStatus)
 // wiredTasks({ error, data }) {
 //     this.wiredTaskResult = data;
@@ -45,6 +90,9 @@ export default class AssignTaskForm extends LightningElement {
 //         console.error('Task fetch error', error);
 //     }
 // }
+
+
+
 
 updateTask = () => {
     updateTaskRecord({ task: this.editableTask })

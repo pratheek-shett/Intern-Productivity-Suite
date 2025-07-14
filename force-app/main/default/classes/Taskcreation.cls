@@ -119,7 +119,7 @@ public static void uploadFileToTask(String fileName, String base64Data, Id taskI
     ContentDocumentLink cdl = new ContentDocumentLink();
     cdl.ContentDocumentId = contentDocId;
     cdl.LinkedEntityId = taskId;
-    cdl.ShareType = 'V';
+    cdl.ShareType = 'I';
     cdl.Visibility = 'AllUsers';
     insert cdl;
 
@@ -193,7 +193,7 @@ public static void replaceFileOnTask(String fileName, String base64Data, Id task
     ContentDocumentLink cdl = new ContentDocumentLink();
     cdl.ContentDocumentId = contentDocId;
     cdl.LinkedEntityId = taskId;
-    cdl.ShareType = 'V';
+    cdl.ShareType = 'I';
     cdl.Visibility = 'AllUsers';
     insert cdl;
 
@@ -285,7 +285,7 @@ public static String uploadAndDistributeTaskFile(String base64Data, String fileN
         cv.VersionData = EncodingUtil.base64Decode(base64Data);
         insert cv;
 
-        // Step 2: Query ContentDocumentId
+        // Step 2: Get ContentDocumentId
         ContentVersion insertedVersion = [
             SELECT Id, ContentDocumentId 
             FROM ContentVersion 
@@ -293,16 +293,28 @@ public static String uploadAndDistributeTaskFile(String base64Data, String fileN
             LIMIT 1
         ];
 
-        // 🔑 Step 3: Link it to a dummy record the user can access (workaround)
-        // Example: Use UserInfo.getUserId() or a custom record you know guest/admin owns
-        ContentDocumentLink cdl = new ContentDocumentLink();
-        cdl.ContentDocumentId = insertedVersion.ContentDocumentId;
-        cdl.LinkedEntityId = UserInfo.getUserId(); // safer than Task__c if access issues
-        cdl.ShareType = 'V';
-        cdl.Visibility = 'AllUsers';
-        insert cdl;
+        Id contentDocId = insertedVersion.ContentDocumentId;
+        Id guestLinkId = UserInfo.getUserId();
 
-        // Step 4: Create ContentDistribution (public URL)
+        // Step 3: Check if CDL already exists
+        List<ContentDocumentLink> existingLinks = [
+            SELECT Id 
+            FROM ContentDocumentLink 
+            WHERE ContentDocumentId = :contentDocId 
+            AND LinkedEntityId = :guestLinkId 
+            LIMIT 1
+        ];
+
+        if (existingLinks.isEmpty()) {
+            ContentDocumentLink cdl = new ContentDocumentLink();
+            cdl.ContentDocumentId = contentDocId;
+            cdl.LinkedEntityId = guestLinkId; // Use guest or fallback record
+            cdl.ShareType = 'I'; // 'I' works for guest
+            cdl.Visibility = 'AllUsers';
+            insert cdl;
+        }
+
+        // Step 4: Create ContentDistribution
         ContentDistribution cd = new ContentDistribution();
         cd.Name = fileName;
         cd.ContentVersionId = insertedVersion.Id;
@@ -315,13 +327,13 @@ public static String uploadAndDistributeTaskFile(String base64Data, String fileN
 
         // Step 5: Return public URL
         ContentDistribution newCD = [
-            SELECT ContentDownloadUrl 
+            SELECT DistributionPublicUrl 
             FROM ContentDistribution 
             WHERE Id = :cd.Id 
             LIMIT 1
         ];
 
-        return newCD.ContentDownloadUrl;
+        return newCD.DistributionPublicUrl;
 
     } catch (Exception e) {
         throw new AuraHandledException('Error uploading and sharing task file: ' + e.getMessage());
@@ -330,4 +342,12 @@ public static String uploadAndDistributeTaskFile(String base64Data, String fileN
 
 
 
+//delete task
+
+
+@AuraEnabled
+public static void deltask(id ttaskid){
+    delete [select Id from Task_c__c where Id =:ttaskid Limit 1];
+
+}
 }

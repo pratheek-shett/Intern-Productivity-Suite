@@ -35,6 +35,17 @@ public without sharing class Gettaskforintern {
             Visibility = 'AllUsers'
         );
     }
+
+    @AuraEnabled(cacheable=true)
+public static List<Task_c__c> getInternTasks(String internEmail) {
+    return [
+        SELECT Id, Name, Description__c, Due_Date__c, Status__c, File_Public_URL_c__c
+        FROM Task_c__c 
+        WHERE Assigned_Intern__r.Email__c = :internEmail
+        ORDER BY Due_Date__c ASC
+    ];
+}
+
 }
 
 

@@ -23,7 +23,6 @@
 </a>
 
 </p>
-
     </template>
 </template>
 
@@ -110,13 +109,28 @@
     </div>
     <template if:true={filteredTasks}>
         <ul class="task-list">
-            <template for:each={filteredTasks} for:item="task">
+            <template for:each={paginatedTasks} for:item="task">
+
                  <li key={task.Id}
                  class="task-card"
                  data-id={task.Id}
                  data-status={task.Status__c}
                     onclick={handleTaskClick}>
-                    <h3>{task.Name}</h3>
+                   <div class="slds-grid slds-grid_align-spread">
+        <h3>{task.Name}</h3>
+
+         <button class="delete-button slds-p-horizontal_x-small"
+                onclick={handledeletetask}
+                data-id={task.Id}>
+            <lightning-icon icon-name="utility:delete"
+                            alternative-text="Delete"
+                            size="xx-small"
+                            data-id={task.Id}>
+                            class="delete-icon">
+            </lightning-icon>
+        </button>
+    </div>
+
                     <p>{task.Description__c}</p>
                     <p><strong>Assigned To:</strong> 
     <template if:true={task.Assigned_Intern__r}>
@@ -131,7 +145,20 @@
                 </li>
             </template>
         </ul>
+        
     </template>
+    <template if:true={paginationButtons}>
+    <div class="slds-m-top_medium">
+        <template for:each={paginationButtons} for:item="button">
+            <button key={button.number}
+                    class={button.cssClass}
+                    data-page={button.number}
+                    onclick={handlePageChange}>
+                {button.number}
+            </button>
+        </template>
+    </div>
+</template>
 </div>
 </div>
 </div>
