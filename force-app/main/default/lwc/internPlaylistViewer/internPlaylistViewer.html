@@ -1,81 +1,59 @@
 <template>
+    <lightning-card title="Training Playlist">
+        <lightning-button
+            label="View on YouTube"
+            slot="actions"
+            icon-name="utility:video"
+            onclick={handleViewOnYouTube}
+            disabled={isLoading}
+        ></lightning-button>
 
-<div class="slds-p-around_medium">
+        <div class="slds-p-around_medium">
+            <template if:true={isLoading}>
+                <div class="spinner-container">
+                    <lightning-spinner alternative-text="Loading videos..." size="medium"></lightning-spinner>
+                </div>
+            </template>
 
+            <template if:false={isLoading}>
 
+                <template if:true={error}>
+                    <div class="slds-align_absolute-center slds-text-align_center slds-m-around_large">
+                        <lightning-icon icon-name="utility:warning" variant="warning" size="large"></lightning-icon>
+                        <h2 class="slds-text-heading_medium slds-m-top_medium">No Videos Found</h2>
+                        <p class="slds-m-top_small">{error}</p>
+                    </div>
+                </template>
 
-<!-- Show selected video -->
+                <template if:false={error}>
+                    <template if:true={selectedVideoId}>
+                        <div class="video-player slds-m-bottom_large">
+                            <iframe
+                                width="100%"
+                                height="450"
+                                src={selectedVideoUrl}
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                    </template>
 
-<template if:true={selectedVideoId}>
+                    <lightning-layout multiple-rows="true" pull-to-boundary="small">
+                        <template for:each={videos} for:item="video">
+                            <lightning-layout-item key={video.videoId} padding="around-small" size="12" medium-device-size="6" large-device-size="4">
+                                <div class="video-tile" onclick={handleVideoClick} data-videoid={video.videoId}>
+                                    <img src={video.thumbnailUrl} alt={video.title} class="video-thumbnail"/>
+                                    <p class="slds-m-top_small slds-truncate video-title" title={video.title}>
+                                        {video.title}
+                                    </p>
+                                </div>
+                            </lightning-layout-item>
+                        </template>
+                    </lightning-layout>
+                </template>
 
-<div class="video-player slds-m-bottom_medium">
-
-<iframe
-
-width="100%"
-
-height="400"
-
-src={selectedVideoUrl}
-
-frameborder="0"
-
-allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-
-allowfullscreen>
-
-</iframe>
-
-</div>
-
-</template>
-
-
-
-<!-- Show video list -->
-
- <template if:true={videos}>
-
-<div class="video-list slds-grid slds-wrap">
-
-<template for:each={videos} for:item="video">
-
-<div
-
-key={video.videoId}
-
-class="video-item slds-col slds-size_1-of-2 slds-p-around_small"
-
-onclick={handleVideoClick}
-
- data-videoid={video.videoId}
-
-style="cursor: pointer; border: 1px solid #ddd; border-radius: 8px;">
-
-<img src={video.thumbnailUrl} alt={video.title} style="width: 100%; border-radius: 4px;" />
-
-<p class="slds-m-top_small slds-truncate" title={video.title}>{video.title}</p>
-
-</div>
-
-</template>
-
-</div>
-
-</template>
-
-
-
-<!-- Error message -->
-
-<template if:true={error}>
-
- <p class="slds-text-color_error slds-text-body_regular">{error}</p>
-
-</template>
-
-
-
- </div>
-
+            </template>
+        </div>
+    </lightning-card>
 </template>
