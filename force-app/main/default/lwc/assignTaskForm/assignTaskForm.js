@@ -1,24 +1,33 @@
-import { LightningElement,wire,track } from 'lwc';
-import getStatusPicklistValues from '@salesforce/apex/getpicklistdata.getStatusPicklistValues'
-import Taskcreation from '@salesforce/apex/Taskcreation.Taskcreation'
-import getStatus from '@salesforce/apex/Taskcreation.getStatus'
-import uploadFileToTask from '@salesforce/apex/Taskcreation.uploadFileToTask'
+import { LightningElement, wire, track } from 'lwc';
+import getStatusPicklistValues from '@salesforce/apex/getpicklistdata.getStatusPicklistValues';
+import Taskcreation from '@salesforce/apex/Taskcreation.Taskcreation';
+import getStatus from '@salesforce/apex/Taskcreation.getStatus';
 import updateTaskRecord from '@salesforce/apex/Taskcreation.updateTask';
 import replaceFileOnTask from '@salesforce/apex/Taskcreation.replaceFileOnTask';
-import generateTaskFilePublicUrl from '@salesforce/apex/Taskcreation.generateTaskFilePublicUrl';
-import uploadAndDistributeTaskFile from '@salesforce/apex/Taskcreation.uploadAndDistributeTaskFile';
 import deltask from '@salesforce/apex/Taskcreation.deltask';
+import uploadAndDistributeTaskFile from '@salesforce/apex/Taskcreation.uploadAndDistributeTaskFile';
+import uploadFileToTask from '@salesforce/apex/Taskcreation.uploadFileToTask';
 import updateTaskWithPublicUrl from '@salesforce/apex/Taskcreation.updateTaskWithPublicUrl';
+import submitAdminComment from '@salesforce/apex/Taskcreation.submitAdminComment';
+
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { refreshApex } from '@salesforce/apex';
-
 
 export default class AssignTaskForm extends LightningElement {
     @track showModal = false;
     @track editableTask = {};
-    @track uploadedFile; 
+    @track uploadedFile;
     @track selectedTab = 'Pending';
+    @track selectedTask = null;
+@track currentTaskFile = null;
+
     @track allTasks = [];
+    @track filteredTasks = [];
+    @track currentPage = 1;
+    pageSize = 5;
+    @track enableissubmitbutton = false;
+    @track completedandoverdue = false;
+
     @track title = '';
     @track description = '';
     @track dueDate = '';
@@ -27,274 +36,175 @@ export default class AssignTaskForm extends LightningElement {
     @track selectedInternId = '';
     @track assignedbyemail = '';
     @track recordId;
-    @track uploadedFileIds = [];
-    wiredTaskResult;
-    @track selectedFile;
-    @track base64FileData;
+    @track base64FileData = '';
     @track fileName = '';
-    @track isLoadingFiles = false;
-    @track previewUrlPublic; // Add this line to hold the ContentDistribution URL
-    @track previewUrl = null;
-     @track currentPage = 1;
-    pageSize = 5;
-
-get totalPages() {
-    return Math.ceil(this.filteredTasks.length / this.pageSize);
-}
-
-get paginatedTasks() {
-    const start = (this.currentPage - 1) * this.pageSize;
-    return this.filteredTasks.slice(start, start + this.pageSize);
-}
-
-get paginationButtons() {
-    return Array.from({ length: this.totalPages }, (_, i) => {
-        const pageNum = i + 1;
-        return {
-            number: pageNum,
-            cssClass: pageNum === this.currentPage
-                ? 'slds-button slds-button_brand'
-                : 'slds-button slds-button_neutral'
-        };
-    });
-}
-
-
-handledeletetask(event){
-    event.preventDefault();
-    event.stopPropagation();
-    const taskid = event.target.dataset.id || event.currentTarget.dataset.id;
-     console.log('Deleting Task ID:', taskid); 
-     if (confirm('Are you sure you want to delete this task?')) {
-        deltask({ ttaskid :taskid })
-            .then(() => {
-                this.showNotification('Task deleted successfully!', 'success');
-                return refreshApex(this.wiredTaskResult);
-            })
-            .catch(error => {
-                console.error('Delete failed:', error);
-                this.showNotification('Failed to delete task', 'error');
-            });
-    }
-}
-
-handlePageChange(event) {
-    this.currentPage = parseInt(event.target.dataset.page, 10);
-}
-//     @wire(getStatus)
-// wiredTasks({ error, data }) {
-//     this.wiredTaskResult = data;
-//     if (data) {
-//         this.allTasks = data;
-//     } else if (error) {
-//         console.error('Task fetch error', error);
-//     }
-// }
-
-
-
-
-updateTask = () => {
-    updateTaskRecord({ task: this.editableTask })
-        .then(() => {
-            this.showNotification('Task updated', 'success');
-            this.showModal = false;
-            return refreshApex(this.wiredTaskResult);
-        })
-        .catch(error => {
-            console.error('Error updating task:', error);
-            this.showNotification('Failed to update task', 'error');
-        });
-}
-handleTaskClick(event) {
-    const status = event.currentTarget.dataset.status;
-    const taskId = event.currentTarget.dataset.id;
-
-    if (status === 'Not Started') {
-        this.isLoadingFiles = true;
-        const taskToEdit = this.allTasks.find(t => t.Id === taskId);
-        this.editableTask = { ...taskToEdit };
-        this.recordId = taskId;
-
-        const publicUrl = this.editableTask.File_Public_URL_c__c;
-
-        if (publicUrl) {
-            this.uploadedFile = { Title: 'Attached File' };  // Just for displaying title
-            this.previewUrl = publicUrl;
-        } else {
-            this.uploadedFile = null;
-            this.previewUrl = null;
-        }
-
-        this.showModal = true;
-        this.isLoadingFiles = false;
-    }
-}
-
-
-
-
-
-
-
-
-// Add this getter to your component
-// Replace the existing getters with these:
-get fileTitle() {
-    return this.uploadedFile?.Title || 'Untitled Document';
-}
-
-// Remove both existing previewUrl getters and use this single one
-get previewUrl() {
-    return this.editableTask.File_Public_URL_c__c || null;
-}
-
-
-get downloadLink() {
-    return `/sfc/servlet.shepherd/version/download/${this.uploadedFile?.LatestPublishedVersionId}`;
-}
-
-
-get showFilePreview() {
-    const supportedTypes = ['pdf', 'png', 'jpeg', 'jpg', 'gif'];
-    const fileExt = this.uploadedFile?.FileExtension?.toLowerCase();
-    return this.previewUrl && supportedTypes.includes(fileExt);
-}
-handleViewDocument(event) {
-    // Optional: Add any additional logic here
-    // The link will open in new tab by default due to target="_blank"
-}
-handleReplaceFile(event) {
-    const file = event.target.files[0];
-    this.fileName = file.name;
-    const reader = new FileReader();
-    reader.onload = () => {
-        const base64 = reader.result.split(',')[1];
-        replaceFileOnTask({
-            fileName: this.fileName,
-            base64Data: base64,
-            taskId: this.recordId
-        }).then(() => {
-            alert('File replaced successfully');
-        }).catch(err => {
-            console.error(err);
-            alert('Failed to replace file');
-        });
-    };
-    reader.readAsDataURL(file);
-}
-
-handleEditField(event) {
-    const field = event.target.dataset.field;
-    this.editableTask = { ...this.editableTask, [field]: event.target.value };
-}
-
-closeModal() {
-    this.showModal = false;
-}
-
-@wire(getStatus)
-wiredTasks(result) {
-    this.wiredTaskResult = result; // Store the result for refresh
-    const { data, error } = result;
-    if (data) {
-        this.allTasks = data;
-    } else if (error) {
-        console.error('Task fetch error', error);
-    }
-}
-get filteredTasks() {
-    const today = new Date();
-    return this.allTasks.filter(task => {
-        if (this.selectedTab === 'Overdue') {
-            return task.Status__c !== 'Completed' && new Date(task.Due_Date__c) < today;
-        }
-        if (this.selectedTab === 'Pending') {
-            return task.Status__c === 'Pending' || task.Status__c === 'Not Started';
-        }
-        return task.Status__c === this.selectedTab;
-    });
-}
-get fileTitle() {
-    return this.uploadedFile?.Title || 'No file attached';
-}
-
-handleUploadFile(event){
-    const file = event.target.files[0];
-    this.fileName = file.name;
-    const reader = new FileReader();
-    reader.onload = () => {
-            const base64 = reader.result.split(',')[1]; // Remove metadata
-            this.base64FileData = base64;
-        };
-        reader.readAsDataURL(file);
-
-}
-
-uploadFileToTask() {
-       if (this.base64FileData && this.fileName) {
-    return uploadAndDistributeTaskFile({
-        base64Data: this.base64FileData,
-        fileName: this.fileName,
-        taskName: this.title
-    }).then(publicUrl => {
-        this.previewUrl = publicUrl;
-        this.editableTask.File_Public_URL_c__c = publicUrl; // If you want to use it for preview
-    });
-}
-
-    }
-
-handleTabChange(event) {
-    this.selectedTab = event.target.dataset.tab;
-}
-    connectedCallback(){
-        this.assignedbyemail = sessionStorage.getItem('adminEmail');
-        console.log(this.assignedbyemail);
-    }
-showNotification() {
-        const evt = new ShowToastEvent({
-          title: 'Task Assigned',
-          message: 'Task Assigned Successfully!',
-          variant: 'success',
-        });
-        this.dispatchEvent(evt);
-      }
-selectedInternId
-selectedInternName
-    types = ['.pdf','.docx', '.png', '.jpeg'];
-
-    handleChange(event) {
-        const { name, value } = event.target;
-        this[name] = value;
-    }
-handleInternSelected(event) {
-    this.selectedInternId = event.detail.recordId;
-    this.selectedInternName = event.detail.label;
-} 
+    @track previewUrl;
+    @track adminComment = '';
     @track pickitems = [];
 
-       @wire(getStatusPicklistValues)
-       pickeritems({ data, error }) {
+    wiredTaskResult;
+
+    connectedCallback() {
+       
+        this.assignedbyemail = sessionStorage.getItem('adminEmail');
+    }
+   submitCommentHandler() {
+    // call Apex to save comment on selected task
+    submitAdminComment({ taskId: this.selectedTask.Id, comment: this.adminComment })
+        .then(() => {
+            this.showToast('Success', 'Comment submitted successfully', 'success');
+            this.closeModal();
+            this.refreshTaskList(); // if implemented
+        })
+        .catch(error => {
+            this.showToast('Error', 'Failed to submit comment', 'error');
+            console.error(error);
+        });
+}
+
+
+    @wire(getStatus)
+    wiredTasks(result) {
+        this.wiredTaskResult = result;
+        const { data, error } = result;
+        if (data) {
+            this.allTasks = data;
+            this.filterTasks();
+        } else if (error) {
+            console.error('Error fetching tasks', error);
+        }
+    }
+
+    @wire(getStatusPicklistValues)
+    pickeritems({ data, error }) {
         if (data) {
             this.pickitems = data.map(value => ({
                 label: value,
                 value: value
             }));
-            
-        } else if (error) {
-            console.error('Error fetching picklist values:', error);
+        } else {
+            console.error('Error loading picklist values:', error);
         }
     }
+get modalTitle() {
+    return this.isCompletedOrOverdue ? 'Submitted Task View' : 'Edit Task';
+}
 
-
-   assigntask() {
-    if (!this.selectedInternId) {
-        alert('Please select an intern');
-        return;
+    handleChange(event) {
+        const { name, value } = event.target;
+        this[name] = value;
     }
 
-    let createdTaskId;
+    handleInternSelected(event) {
+        this.selectedInternId = event.detail.recordId;
+    }
+
+    get totalPages() {
+        return Math.ceil(this.filteredTasks.length / this.pageSize);
+    }
+
+    get paginatedTasks() {
+        const start = (this.currentPage - 1) * this.pageSize;
+        return this.filteredTasks.slice(start, start + this.pageSize);
+    }
+
+    get paginationButtons() {
+        return Array.from({ length: this.totalPages }, (_, i) => {
+            const pageNum = i + 1;
+            return {
+                number: pageNum,
+                cssClass: pageNum === this.currentPage
+                    ? 'slds-button slds-button_brand'
+                    : 'slds-button slds-button_neutral'
+            };
+        });
+    }
+
+    handleTabChange(event) {
+        this.selectedTab = event.target.dataset.tab;
+        this.filterTasks();
+    }
+
+    filterTasks() {
+        const today = new Date();
+        this.filteredTasks = this.allTasks.filter(task => {
+            if (this.selectedTab === 'Overdue') {
+                this.completedandoverdue = true;
+                return task.Status__c !== 'Completed' && new Date(task.Due_Date__c) < today;
+            }
+            if (this.selectedTab === 'Pending') {
+                this.completedandoverdue = true;
+                return task.Status__c === 'Pending' || task.Status__c === 'Not Started';
+            }
+            this.completedandoverdue = false;
+            return task.Status__c === this.selectedTab;
+        });
+    }
+
+    handlePageChange(event) {
+        this.currentPage = parseInt(event.target.dataset.page, 10);
+    }
+
+    handleUploadFile(event) {
+        const file = event.target.files[0];
+        this.fileName = file.name;
+        const reader = new FileReader();
+        reader.onload = () => {
+            this.base64FileData = reader.result.split(',')[1];
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // assigntask() {
+    //     if (!this.selectedInternId) {
+    //         alert('Please select an intern');
+    //         return;
+    //     }
+
+    //     let createdTaskId;
+
+    //     Taskcreation({
+    //         title: this.title,
+    //         description: this.description,
+    //         dueDate: this.dueDate,
+    //         status: this.status,
+    //         internId: this.selectedInternId,
+    //         resourceUrl: this.resourceUrl,
+    //         assignedby: this.assignedbyemail,
+    //         fileid: null
+    //     }).then(result => {
+    //         createdTaskId = result;
+    //         this.recordId = result;
+
+    //         if (this.base64FileData && this.fileName) {
+    //             return uploadAndDistributeTaskFile({
+    //                 base64Data: this.base64FileData,
+    //                 fileName: this.fileName,
+    //                 taskName: this.title
+    //             }).then(publicUrl => {
+    //                 this.previewUrl = publicUrl;
+    //                 return updateTaskWithPublicUrl({
+    //                     taskId: createdTaskId,
+    //                     publicUrl: publicUrl
+    //                 });
+    //             });
+    //         } else {
+    //             return Promise.resolve();
+    //         }
+    //     }).then(() => {
+    //         this.showToast('Task Assigned Successfully!', 'Task assigned', 'success');
+    //         return refreshApex(this.wiredTaskResult);
+    //     }).catch(error => {
+    //         alert('Failed to assign task');
+    //         console.error(error);
+    //     });
+    // }
+
+    assigntask() {
+    if (!this.selectedInternId) {
+        this.showToast('Please select an intern', 'Validation Error', 'error');
+        return;
+    }
 
     Taskcreation({
         title: this.title,
@@ -304,42 +214,261 @@ handleInternSelected(event) {
         internId: this.selectedInternId,
         resourceUrl: this.resourceUrl,
         assignedby: this.assignedbyemail,
-        fileid: null // No need now
-    }).then(result => {
-        createdTaskId = result;
-        this.recordId = result;
-
+        fileid: null 
+    }).then(createdTaskId => {
+        // If a file was uploaded, call the CORRECT Apex method
         if (this.base64FileData && this.fileName) {
-            // Upload + get public URL
-            return uploadAndDistributeTaskFile({
-                base64Data: this.base64FileData,
+            // Pass the taskId of the record we just created
+            return uploadFileToTask({
                 fileName: this.fileName,
-                taskName: this.title
-            }).then(publicUrl => {
-                this.previewUrl = publicUrl;
-
-                // Update the Task__c record with public link
-                return updateTaskWithPublicUrl({
-                    taskId: createdTaskId,
-                    publicUrl: publicUrl
-                });
+                base64Data: this.base64FileData,
+                taskId: createdTaskId 
             });
-        } else {
-            // No file, skip file upload step
-            return Promise.resolve();
         }
+        // If no file, resolve the promise to continue
+        return Promise.resolve();
     }).then(() => {
-        // Always show toast and refresh
-        this.showNotification();
+        this.showToast('Task Assigned Successfully!', 'Success', 'success');
+        this.cleanfields();
+        // Optionally reset your form fields here
         return refreshApex(this.wiredTaskResult);
     }).catch(error => {
-        alert('Failed to assign task or upload file');
-        console.error(error);
+        let errorMessage = 'Failed to assign task. Please check the console.';
+        if (error.body && error.body.message) {
+            errorMessage = error.body.message;
+        }
+        this.showToast(errorMessage, 'Error', 'error');
+        console.error('Error during task assignment: ', JSON.stringify(error));
     });
+}
+    // handleTaskClick(event) {
+    //     const taskId = event.currentTarget.dataset.id;
+
+    //     const task = this.allTasks.find(t => t.Id === taskId);
+    //     this.editableTask = { ...task };
+    //     this.recordId = taskId;
+
+    //     if (this.isCompletedOrOverdue) {
+    //         this.selectedTask = task;
+    //     }
+
+    //     this.uploadedFile = task.File_Public_URL_c__c ? { Title: 'Attached File' } : null;
+    //     this.previewUrl = task.File_Public_URL_c__c || null;
+
+    //     this.showModal = true;
+    // }
+
+    handleTaskClick(event) {
+    const taskId = event.currentTarget.dataset.id;
+    
+    // Always refresh data before opening modal for completed tasks
+    if (this.selectedTab === 'Completed') {
+        this.refreshTaskData().then(() => {
+            this.openModalForTask(taskId);
+        }).catch(error => {
+            console.error('Error refreshing task data:', error);
+            // Still try to open modal with existing data
+            this.openModalForTask(taskId);
+        });
+    } else {
+        this.openModalForTask(taskId);
+    }
+}
+
+// Add this new method to refresh task data
+refreshTaskData() {
+    return getStatus()
+        .then(result => {
+            this.allTasks = result;
+            this.filterTasks();
+        })
+        .catch(error => {
+            console.error('Error refreshing task data:', error);
+        });
+}
+
+// Add this helper method to open modal
+// openModalForTask(taskId) {
+//     const task = this.allTasks.find(t => t.Id === taskId);
+//     if (task) {
+//         this.editableTask = { ...task };
+//         this.recordId = taskId;
+        
+//         if (this.isCompletedOrOverdue) {
+//             this.selectedTask = { ...task };
+//             console.log('Selected task file URL:', task.File_Public_URL_c__c);
+//         }
+        
+//         this.uploadedFile = task.File_Public_URL_c__c ? { Title: 'Attached File' } : null;
+//         this.previewUrl = task.File_Public_URL_c__c || null;
+        
+//         this.showModal = true;
+//     }
+// }
+openModalForTask(taskId) {
+    const task = this.allTasks.find(t => t.Id === taskId);
+    if (task) {
+        this.editableTask = { ...task };
+        this.recordId = taskId;
+        
+        // CRITICAL FIX: Set selectedTask for ALL tasks
+        this.selectedTask = { ...task };
+        
+        // Set current file information
+        this.setCurrentFileInfo(task);
+        
+        // Set file preview URL
+        this.previewUrl = task.File_Public_URL_c__c || null;
+        
+        // Debug logging
+        console.log('Selected task:', this.selectedTask);
+        console.log('File URL:', this.selectedTask.File_Public_URL_c__c);
+        
+        this.showModal = true;
+    }
+}
+
+// setCurrentFileInfo(task) {
+//     if (task.File_Public_URL_c__c) {
+//         this.currentTaskFile = {
+//             url: task.File_Public_URL_c__c,
+//             title: task.Name + ' - Attached File',
+//             exists: true
+//         };
+//         this.uploadedFile = { Title: 'Attached File' };
+//     } else {
+//         this.currentTaskFile = null;
+//         this.uploadedFile = null;
+//     }
+// }
+setCurrentFileInfo(task) {
+    if (task.File_Public_URL_c__c) {
+        this.currentTaskFile = {
+            url: task.File_Public_URL_c__c,
+            title: task.Name + ' - Attached File',
+            exists: true
+        };
+        this.uploadedFile = { Title: 'Attached File' };
+    } else {
+        this.currentTaskFile = null;
+        this.uploadedFile = null;
+    }
+}
+
+   closeModal() {
+    this.showModal = false;
+    this.adminComment = '';
+    this.selectedTask = null;
+    this.currentTaskFile = null;
+    this.uploadedFile = null;
+    this.previewUrl = null;
+    this.editableTask = {};
 }
 
 
+    // get isCompletedOrOverdue() {
+    //     if (!this.editableTask) return false;
+    //     const status = this.editableTask.Status__c;
+    //     const dueDate = new Date(this.editableTask.Due_Date__c);
+    //     return status === 'Completed' || (status !== 'Completed' && dueDate < new Date());
+    // }
+    get isCompletedOrOverdue() {
+    if (!this.selectedTask) return false;
+    const status = this.selectedTask.Status__c;
+    const dueDate = new Date(this.selectedTask.Due_Date__c);
+    return status === 'Completed' || (status !== 'Completed' && dueDate < new Date());
+}
 
 
-    
+    get fileTitle() {
+        return this.uploadedFile?.Title || 'No file attached';
+    }
+
+    get downloadLink() {
+        return `/sfc/servlet.shepherd/version/download/${this.uploadedFile?.LatestPublishedVersionId}`;
+    }
+
+    handleEditField(event) {
+        const field = event.target.dataset.field;
+        this.editableTask = { ...this.editableTask, [field]: event.target.value };
+    }
+
+    updateTask = () => {
+        updateTaskRecord({ task: this.editableTask })
+            .then(() => {
+                this.showToast('Task updated successfully', 'Success', 'success');
+                this.showModal = false;
+                return refreshApex(this.wiredTaskResult);
+            })
+            .catch(error => {
+                this.showToast('Failed to update task', 'Error', 'error');
+                console.error(error);
+            });
+    }
+
+    handleReplaceFile(event) {
+        const file = event.target.files[0];
+        this.fileName = file.name;
+        const reader = new FileReader();
+        reader.onload = () => {
+            const base64 = reader.result.split(',')[1];
+            replaceFileOnTask({
+                fileName: this.fileName,
+                base64Data: base64,
+                taskId: this.recordId
+            }).then(() => {
+                this.showToast('File replaced successfully', 'Success', 'success');
+            }).catch(err => {
+                console.error(err);
+                this.showToast('Failed to replace file', 'Error', 'error');
+            });
+        };
+        reader.readAsDataURL(file);
+    }
+
+    handledeletetask(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        const taskid = event.target.dataset.id || event.currentTarget.dataset.id;
+        if (confirm('Are you sure you want to delete this task?')) {
+            deltask({ ttaskid: taskid })
+                .then(() => {
+                    this.showToast('Task deleted successfully', 'Deleted', 'success');
+                    return refreshApex(this.wiredTaskResult);
+                })
+                .catch(error => {
+                    console.error('Delete failed:', error);
+                    this.showToast('Failed to delete task', 'Error', 'error');
+                });
+        }
+    }
+
+    handleCommentChange(event) {
+        this.adminComment = event.target.value;
+        if(this.adminComment != null){
+            this.enableissubmitbutton = true;
+        }else{
+            this.enableissubmitbutton = false;
+        }
+    }
+
+
+    cleanfields(){
+        this.title = '';
+        this.description = '';
+        this.dueDate= '';
+        this.status = '';
+        this.internId = '';
+        this.resourceUrl = '';
+        this.assignedby = '';
+        this.fileid = '';
+    }
+
+    showToast(message, title, variant) {
+        this.dispatchEvent(new ShowToastEvent({
+            title,
+            message,
+            variant
+        }));
+    }
 }

@@ -24,7 +24,185 @@
     padding-bottom: 5px;
 
 }
+
+/* Modal Overrides & Enhancements */
+.slds-modal__container {
+    border-radius: 12px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25); /* Stronger, softer shadow */
+    overflow: hidden; /* Ensures rounded corners are respected */
+}
+
+.modal-animated {
+    animation: modalFadeIn 0.3s ease-out; /* Fade-in for the modal itself */
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.slds-modal__header {
+    background-color: #f8f9fa; /* Light header background */
+    border-bottom: 1px solid #e9ecef;
+    padding: 1.5rem 2rem; /* More padding */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative; /* For close button positioning */
+}
+
+.slds-modal__header h2 {
+    color: #2c3e50; /* Darker, professional heading color */
+    font-size: 1.6rem; /* Slightly larger title */
+    font-weight: 600;
+    margin: 0;
+}
+
+.close-modal-button {
+    background-color: transparent; /* No background */
+    border: none;
+    padding: 0.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.close-modal-button:hover {
+    background-color: #e9ecef; /* Light grey on hover */
+}
+
+.close-modal-button lightning-icon {
+    --sds-c-icon-color-foreground: #555; /* Dark grey for close icon */
+}
+
+.slds-modal__content {
+    padding: 2rem; /* Consistent padding */
+    line-height: 1.6;
+    color: #555;
+    max-height: 70vh; /* Limit modal height for scrollability */
+    overflow-y: auto; /* Enable scrolling if content is too long */
+}
+
+.modal-section {
+    margin-bottom: 1.5rem; /* Space between logical sections */
+}
+
+.modal-section:last-child {
+    margin-bottom: 0; /* No margin after the last section */
+}
+
+.modal-field-label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-weight: 600;
+    color: #444;
+    font-size: 0.95rem;
+}
+
+.modal-link {
+    color: #007bff;
+    text-decoration: none;
+    word-break: break-all; /* Ensures long URLs wrap */
+}
+
+.modal-link:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
+
+/* Lightning Textarea Specifics */
+.admin-comment-textarea {
+    --sds-c-textarea-sizing-min-height: 100px; /* Minimum height for the textarea */
+}
+
+.slds-modal__footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    padding: 1.25rem 2rem; /* More padding */
+    border-radius: 0 0 12px 12px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+/* Ensure these are in your global CSS as well, as they apply to buttons generally */
+.slds-button {
+    padding: 0.75rem 1.5rem; /* Slightly more generous padding for all modal buttons */
+    border-radius: 8px; /* Consistent rounded corners */
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.slds-button_neutral {
+    background-color: #e9ecef;
+    color: #34495e;
+    border: 1px solid #dee2e6;
+}
+
+.slds-button_neutral:hover {
+    background-color: #dee2e6;
+    border-color: #c9d2db;
+}
+
+.slds-button_brand {
+    background-color: #007bff;
+    color: white;
+    border: 1px solid #007bff;
+}
+
+.slds-button_brand:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+}
+
+/* Input Fields (already defined but ensuring consistency) */
+.slds-input,
+input[type="url"],
+.file-input { /* Added .file-input class for specific styling if needed */
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #333;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-sizing: border-box;
+}
+
+.slds-input:focus,
+input[type="url"]:focus,
+.file-input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+/* Adjust padding for file input as it behaves differently */
+.file-input {
+    padding-top: 0.65rem;
+    padding-bottom: 0.65rem;
+}
+
+/* Salesforce Lightning-specific adjustments for textarea to match input styling */
+.admin-comment-textarea .slds-textarea {
+    border-radius: 8px;
+    border-color: #ced4da;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-comment-textarea .slds-textarea:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
 .delete-button {
+    
     background-color: #ffe6e6;
     border-radius: 8px;
     box-shadow: 0 0 4px rgba(255, 0, 0, 0.3);

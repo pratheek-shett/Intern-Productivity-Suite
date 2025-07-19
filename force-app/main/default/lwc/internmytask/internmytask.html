@@ -1,28 +1,116 @@
 <template>
     <c-mainnav></c-mainnav>
     <div class="intern-task-container">
-        <h2>📝 My Assigned Task</h2>
+        <h2 class="page-title">My Tasks</h2>
 
-        <template if:true={task}>
-            <div class="task-card">
-                <h3>{task.Name}</h3>
-                <p>{task.Description__c}</p>
-                <p><strong>Due Date:</strong> {task.Due_Date__c}</p>
-                <p>{task.Resource_URL__c}</p>
-                
+        <div class="tabs">
+            <button class={tabClasses.Ongoing} data-tab="Ongoing" onclick={handleTabChange}>Ongoing</button>
+            <button class={tabClasses.Completed} data-tab="Completed" onclick={handleTabChange}>Completed</button>
+            <button class={tabClasses.Overdue} data-tab="Overdue" onclick={handleTabChange}>Overdue</button>
+        </div>
 
-                <label>Resource URL</label>
-                <input type="url" name="resourceUrl" value={resourceUrl} onchange={handleChange} placeholder="https://..." />
-
-                <label>Upload Document</label>
-                <input type="file" accept=".pdf,.png,.jpeg" onchange={handleFileChange} />
-
-                <button class="submit-btn" onclick={handleSubmitTask}>Submit Task ✅</button>
+        <template if:true={filteredTasks}>
+            <ul class="task-list">
+               <template for:each={filteredTasks} for:item="task">
+        <li key={task.Id} class="task-card">
+                        <div class="task-header">
+                            <h3 class="task-title">{task.Name}</h3>
+                            <button class="delete-button" data-id={task.Id} onclick={handleOpenModal}>
+                                <lightning-icon icon-name="utility:delete" alternative-text="Delete" size="x-small"></lightning-icon>
+                            </button>
+                        </div>
+                        <p class="task-desc">{task.Description__c}</p>
+                        <p class="task-date">Due: {task.Due_Date__c}</p>
+                        <template if:true={task.Admincomment__c}>
+        <div class="slds-m-vertical_medium">
+            <strong class="slds-text-title_bold">Admin Feedback:</strong>
+            <div class="slds-box slds-theme_info slds-m-top_x-small">
+                <p style="white-space: pre-wrap;">{task.Admincomment__c}</p>
             </div>
+        </div>
+    </template>
+
+                        <template if:true={task.isOngoing}>
+                            <button class="submit-btn" data-id={task.Id} onclick={handleOpenModal}>Finish Task</button>
+                        </template>
+
+                        <template if:true={task.isCompleted}>
+
+                            <p class="submitted-url">
+                                <strong>Submitted URL:</strong>
+                                  <a href={task.Resource_URL__c} target="_blank" class="task-link">{task.Resource_URL__c}</a>
+                             </p> 
+                            <template if:true={task.File_Public_URL_c__c}>
+                                <a href={task.File_Public_URL_c__c} target="_blank" class="view-file-btn">View Submitted File</a>
+                            </template>
+                            <button class="edit-btn" data-id={task.Id} onclick={handleOpenModal}>Edit Submission</button>
+                        </template>
+
+                        <template if:true={task.isOverdue}>
+                            <p class="overdue-text">Overdue</p>
+                            <button class="submit-btn overdue" data-id={task.Id} onclick={handleOpenModal}>Submit Late Task</button>
+                        </template>
+                    </li>
+                </template>
+            </ul>
+        </template>
+        <template if:false={filteredTasks}>
+            <p class="no-tasks-message">No tasks to display for this category.</p>
         </template>
 
-        <template if:false={task}>
-            <p>No tasks assigned to you yet.</p>
+        <template if:true={showModal}>
+            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <h2 class="slds-text-heading_medium">Submit Task</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        
+                        
+                        <template if:true={selectedTask.Resource_URL__c}>
+                            <p>
+                                <strong>Current URL:</strong>
+                                <a href={selectedTask.Resource_URL__c} target="_blank" class="slds-text-link">
+                                    {selectedTask.Resource_URL__c}
+                                </a>
+                            </p>
+                        </template>
+                        
+    <template if:true={selectedTask.Admincomment__c}>
+    <div class="slds-m-vertical_medium">
+        <strong class="slds-text-title_bold">Admin Feedback:</strong>
+        <div class="slds-box slds-theme_info slds-m-top_x-small">
+            <p style="white-space: pre-wrap;">{selectedTask.Admincomment__c}</p>
+        </div>
+    </div>
+</template>
+
+
+
+                        <template if:true={selectedTask.File_Public_URL_c__c}>
+    <p>
+        <strong>Uploaded File:</strong>
+        <a href={selectedTask.File_Public_URL_c__c} target="_blank" class="slds-text-link">
+            View Submitted File 📎
+        </a>
+    </p>
+</template>
+
+
+                        <label for="resourceUrlInput" class="slds-m-top_medium">New Resource URL</label>
+                        <input type="url" id="resourceUrlInput" value={resourceUrl} onchange={handleResourceUrlChange} class="slds-input" placeholder="https://..." />
+
+                        <label for="fileUploadInput" class="slds-m-top_medium">Upload New File</label>
+                        <input type="file" id="fileUploadInput" class = "file" accept=".pdf,.docx,.png,.jpeg" onchange={handleFileChange} />
+                    </div>
+
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick={closeModal}>Cancel</button>
+                        <button class="slds-button slds-button_brand" onclick={handleSubmitTask}>Submit</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
         </template>
     </div>
 </template>

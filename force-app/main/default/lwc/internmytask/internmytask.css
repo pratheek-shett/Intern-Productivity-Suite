@@ -1,36 +1,414 @@
+/* General Container and Typography */
 .intern-task-container {
-    max-width: 600px;
-    margin: 2rem auto;
-    padding: 1.5rem;
-    background: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.05);
-    font-family: Arial, sans-serif;
+    max-width: 768px; /* Slightly wider for better content display */
+    margin: 3rem auto; /* More vertical space */
+    padding: 2rem;
+    background: #ffffff; /* White background for a clean look */
+    border-radius: 12px; /* Softer rounded corners */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); /* More pronounced, soft shadow */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern, readable font */
+    color: #333; /* Darker text for better contrast */
+    animation: fadeIn 0.5s ease-out; /* Simple fade-in animation */
 }
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.page-title {
+    font-size: 2rem; /* Larger, more prominent title */
+    color: #2c3e50; /* Darker, professional heading color */
+    text-align: center;
+    margin-bottom: 2.5rem; /* More space below title */
+    font-weight: 600; /* Semi-bold */
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    justify-content: center; /* Center the tabs */
+    gap: 0.75rem; /* Slightly reduced gap */
+    margin-bottom: 2rem;
+    padding-bottom: 0.5rem; /* Space for subtle bottom border */
+    border-bottom: 1px solid #e0e0e0; /* Light separator line */
+}
+
+.tabs button {
+    padding: 0.7rem 1.4rem; /* More generous padding */
+    border: none; /* No default border */
+    background-color: transparent; /* Transparent background */
+    color: #555; /* Default tab text color */
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 6px; /* Slightly rounded tabs */
+    transition: all 0.3s ease; /* Smooth transitions for hover and active states */
+    position: relative; /* For the active tab indicator */
+    overflow: hidden; /* Ensures the ripple effect is contained */
+}
+
+.tabs button:hover {
+    color: #007bff; /* Highlight on hover */
+    background-color: #f0f8ff; /* Light blue background on hover */
+}
+
+.tabs button.active-tab {
+    color: #007bff; /* Primary blue for active tab */
+    font-weight: 700; /* Bolder active tab */
+    background-color: #e6f2ff; /* Lighter blue for active background */
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1); /* Subtle shadow for active tab */
+}
+
+/* Active tab indicator (optional, but aesthetic) */
+.tabs button.active-tab::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px; /* Thickness of the indicator */
+    background-color: #007bff; /* Blue line */
+    border-radius: 0 0 6px 6px; /* Rounded bottom corners */
+    animation: slideIn 0.3s forwards; /* Animation for the indicator */
+}
+
+@keyframes slideIn {
+    from {
+        width: 0;
+        left: 50%;
+    }
+    to {
+        width: 100%;
+        left: 0;
+    }
+}
+
+/* Task List and Cards */
+.task-list {
+    list-style: none; /* Remove bullet points */
+    padding: 0;
+    margin: 0;
+}
+
 .task-card {
-    background: white;
+    background: #ffffff;
+    border: 1px solid #e0e0e0; /* Lighter, subtle border */
+    border-radius: 10px; /* Consistent rounded corners */
     padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    margin-bottom: 1.25rem; /* Consistent spacing between cards */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Softer, slightly larger shadow */
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out; /* Smooth hover effect */
 }
+
+.task-card:hover {
+    transform: translateY(-5px); /* Lift effect on hover */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* Enhanced shadow on hover */
+}
+
+.task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.task-title {
+    font-size: 1.4rem; /* Slightly larger task title */
+    color: #34495e; /* Darker heading color */
+    margin: 0;
+    font-weight: 600;
+}
+
+.task-desc {
+    color: #666; /* Softer text color for description */
+    line-height: 1.6; /* Improved readability */
+    margin-bottom: 1rem;
+}
+
+.task-date {
+    color: #777; /* Subtler color for date */
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.task-date::before {
+    content: '📅'; /* Unicode calendar icon */
+    margin-right: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.submitted-url, .uploaded-file-info {
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+}
+
+.task-link, .slds-text-link, .view-file-btn {
+    color: #007bff; /* Standard link color */
+    text-decoration: none; /* No underline by default */
+    transition: color 0.2s ease;
+}
+
+.task-link:hover, .slds-text-link:hover, .view-file-btn:hover {
+    text-decoration: underline; /* Underline on hover for links */
+    color: #0056b3; /* Darker blue on hover */
+}
+
+.view-file-btn {
+    display: inline-flex; /* Allows icon and text to align */
+    align-items: center;
+    gap: 0.3rem; /* Space between icon and text */
+    padding: 0.4rem 0.8rem;
+    background-color: #e9f5ff; /* Light background for the button */
+    border-radius: 5px;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    text-decoration: none;
+    color: #007bff;
+    border: 1px solid #cce0ff;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.view-file-btn:hover {
+    background-color: #dbeaff;
+    border-color: #aaccff;
+}
+
+
+/* Buttons */
+.submit-btn,
+.edit-btn {
+    display: inline-flex; /* Use flexbox for icon alignment */
+    align-items: center; /* Vertically center icon and text */
+    gap: 0.4rem; /* Space between icon and text */
+    padding: 0.8rem 1.6rem; /* More padding for a substantial button */
+    border: none;
+    border-radius: 8px; /* Slightly more rounded buttons */
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.submit-btn {
+    background: #007bff; /* Primary blue for submit */
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2); /* Subtle shadow for submit */
+}
+
+.submit-btn:hover {
+    background: #0069d9; /* Darker blue on hover */
+    transform: translateY(-2px); /* Slight lift on hover */
+    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3); /* Enhanced shadow on hover */
+}
+
+.submit-btn.overdue {
+    background-color: #dc3545; /* Red for overdue submit */
+    box-shadow: 0 4px 10px rgba(220, 53, 69, 0.2);
+}
+
+.submit-btn.overdue:hover {
+    background-color: #c82333;
+    box-shadow: 0 6px 15px rgba(220, 53, 69, 0.3);
+}
+
+.edit-btn {
+    background-color: #6c757d; /* Grey for edit button */
+    color: white;
+    margin-left: 0.5rem; /* Space if next to another button */
+    box-shadow: 0 4px 10px rgba(108, 117, 125, 0.2);
+}
+
+.edit-btn:hover {
+    background-color: #5a6268; /* Darker grey on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(108, 117, 125, 0.3);
+}
+
+.delete-button {
+    background-color: #ffe0e6; /* Very light red background */
+    border: 1px solid #ffb3c1; /* Matching border */
+    padding: 0.4rem; /* Smaller padding for icon button */
+    border-radius: 50%; /* Circular button */
+    display: flex; /* Center the icon */
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 8px rgba(255, 0, 0, 0.05); /* Very subtle shadow */
+}
+
+.delete-button:hover {
+    background-color: #ffcccc; /* Slightly darker red on hover */
+    transform: scale(1.05); /* Pop effect on hover */
+    box-shadow: 0 4px 12px rgba(255, 0, 0, 0.1); /* Increased shadow on hover */
+}
+
+/* Ensure lightning-icon inside delete button inherits fill color */
+.delete-button lightning-icon {
+    --sds-c-icon-color-foreground: #dc3545; /* Red color for the icon */
+    display: block; /* Ensures the icon is properly centered */
+}
+
+
+/* Overdue Text */
+.overdue-text {
+    color: #dc3545; /* Red for overdue text */
+    font-weight: 600;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.overdue-text::before {
+    content: '⚠️'; /* Warning emoji */
+    margin-right: 0.5rem;
+    font-size: 1.1em;
+}
+
+/* No tasks message */
+.no-tasks-message {
+    text-align: center;
+    color: #777;
+    font-style: italic;
+    padding: 2rem;
+    border: 1px dashed #e0e0e0;
+    border-radius: 8px;
+    margin-top: 2rem;
+    background-color: #fcfcfc;
+}
+
+/* Modal Enhancements */
+.slds-modal__container {
+    border-radius: 12px; /* Consistent rounded corners */
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2); /* Stronger modal shadow */
+}
+
+.slds-modal__header {
+    background-color: #f8f9fa; /* Light header background */
+    border-bottom: 1px solid #e9ecef; /* Subtle border */
+    padding: 1.25rem 2rem;
+    border-radius: 12px 12px 0 0; /* Rounded top corners */
+}
+
+.slds-modal__header h2 {
+    color: #34495e; /* Darker heading */
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.slds-modal__content {
+    padding: 2rem;
+    line-height: 1.6;
+    color: #555;
+}
+
+.slds-modal__footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    padding: 1rem 2rem;
+    border-radius: 0 0 12px 12px;
+    display: flex;
+    justify-content: flex-end; /* Align buttons to the right */
+    gap: 0.75rem; /* Space between footer buttons */
+}
+
+.slds-button_neutral {
+    background-color: #e9ecef; /* Light grey for neutral */
+    color: #34495e;
+    border: 1px solid #dee2e6;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+}
+
+.slds-button_neutral:hover {
+    background-color: #dee2e6;
+    border-color: #c9d2db;
+}
+
+.slds-button_brand {
+    background-color: #007bff;
+    color: white;
+    border: 1px solid #007bff;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+}
+
+.slds-button_brand:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+}
+
+/* Input Fields */
 label {
     display: block;
-    margin-top: 1rem;
-    font-weight: bold;
+    margin-top: 1.2rem; /* More space above labels */
+    margin-bottom: 0.4rem; /* Space below label */
+    font-weight: 600; /* Bolder labels */
+    color: #444;
+    font-size: 0.95rem;
 }
-input[type="url"], input[type="file"] {
+
+.slds-input,
+input[type="url"],
+input[type="file"] {
     width: 100%;
-    margin-top: 0.5rem;
+    padding: 0.75rem 1rem; /* More padding inside inputs */
+    border: 1px solid #ced4da; /* Subtle border color */
+    border-radius: 8px; /* Rounded input fields */
+    font-size: 1rem;
+    color: #333;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
 }
-.submit-btn {
-    margin-top: 1.5rem;
-    background: #0070d2;
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 5px;
-    cursor: pointer;
+
+.slds-input:focus,
+input[type="url"]:focus,
+input[type="file"]:focus {
+    border-color: #007bff; /* Highlight border on focus */
+    outline: none; /* Remove default outline */
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); /* Subtle glow on focus */
 }
-.submit-btn:hover {
-    background: #005fb2;
+
+/* Specific styling for file input (can be tricky to style consistently across browsers) */
+input[type="file"] {
+    padding: 0.75rem 0; /* Adjust padding as file inputs might behave differently */
+}
+
+/* Placeholders */
+::placeholder {
+    color: #888;
+    opacity: 1; /* Ensure placeholder is visible */
+}
+.file::-webkit-file-upload-button{
+    color: #837A7A;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 9999px;
+    border: 1px solid #5C5C5C;
+    background-color: #FFFFFF;
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+}
+/* Empty State */
+.no-tasks-message {
+    text-align: center;
+    color: #777;
+    font-style: italic;
+    padding: 2rem;
+    border: 1px dashed #e0e0e0;
+    border-radius: 8px;
+    margin-top: 2rem;
+    background-color: #fcfcfc;
 }

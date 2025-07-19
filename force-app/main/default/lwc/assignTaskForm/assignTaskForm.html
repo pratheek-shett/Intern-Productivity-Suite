@@ -1,64 +1,156 @@
 <template>
     <c-adminnavigationbar></c-adminnavigationbar>
 
-    
-     <template if:true={showModal}>
-    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
-        <div class="slds-modal__container">
-            <header class="slds-modal__header">
-                <h2 class="slds-text-heading_medium">Edit Task</h2>
-            </header>
-            <div class="slds-modal__content slds-p-around_medium">
-                <lightning-input label="Task Title" value={editableTask.Name} onchange={handleEditField} data-field="Name"></lightning-input>
-                <lightning-textarea label="Description" value={editableTask.Description__c} onchange={handleEditField} data-field="Description__c"></lightning-textarea>
-                <lightning-input type="date" label="Due Date" value={editableTask.Due_Date__c} onchange={handleEditField} data-field="Due_Date__c"></lightning-input>
-                
-             <template if:true={uploadedFile}>
-    <p><strong>Attached File:</strong> {fileTitle}</p>
+    <!-- ✅ MODAL SECTION -->
+    <template if:true={showModal}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open modal-animated">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 class="slds-text-heading_medium">{modalTitle}</h2>
+                    <button class="slds-button slds-button_icon slds-modal__close close-modal-button" title="Close" onclick={closeModal}>
+                        <lightning-icon icon-name="utility:close" alternative-text="Close" size="small"></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
 
-    <template if:true={previewUrl}>
-        <p class="slds-m-top_small">
-   <a href={previewUrl} target="_blank" class="slds-button slds-button_outline-brand">
-    View Attached File
-</a>
+                    <!-- COMPLETED/OVERDUE TASKS VIEW -->
+                    <template if:true={isCompletedOrOverdue}>
+                        <div class="modal-section">
+                            <template if:true={selectedTask.Resource_URL__c}>
+                                <p class="modal-field-label">Submitted URL:</p>
+                                <p>
+                                    <a href={selectedTask.Resource_URL__c} target="_blank" class="slds-text-link modal-link">
+                                        {selectedTask.Resource_URL__c}
+                                    </a>
+                                </p>
+                            </template>
 
-</p>
-    </template>
-</template>
+                            <template if:true={selectedTask.File_Public_URL_c__c}>
+                                <p><strong>Uploaded File:</strong></p>
+                                <a href={selectedTask.File_Public_URL_c__c} target="_blank" class="slds-button slds-button_outline-brand">
+                                    View Uploaded File
+                                </a>
+                            </template>
 
-<template if:false={previewUrl}>
-    <p class="slds-text-color_error">
-        Unable to preview file. Please <a href={downloadLink} target="_blank">download it</a> instead.
-    </p>
-</template>
+                            <div class="modal-section slds-m-top_large">
+                                <lightning-textarea
+                                    label="Admin Comment"
+                                    value={adminComment}
+                                    onchange={handleCommentChange}
+                                    class="slds-m-bottom_medium">
+                                </lightning-textarea>
+                            </div>
+                        </div>
+                    </template>
 
+                    <!-- PENDING TASKS EDIT VIEW -->
+                    <template if:false={isCompletedOrOverdue}>
+                        <div class="modal-section">
+                            <!-- Task Edit Fields -->
+                            <lightning-input 
+                                label="Task Title" 
+                                value={editableTask.Name} 
+                                onchange={handleEditField} 
+                                data-field="Name"
+                                class="slds-m-bottom_medium">
+                            </lightning-input>
+                            
+                            <lightning-textarea 
+                                label="Description" 
+                                value={editableTask.Description__c} 
+                                onchange={handleEditField} 
+                                data-field="Description__c"
+                                class="slds-m-bottom_medium">
+                            </lightning-textarea>
+                            
+                            <lightning-input 
+                                type="date" 
+                                label="Due Date" 
+                                value={editableTask.Due_Date__c} 
+                                onchange={handleEditField} 
+                                data-field="Due_Date__c"
+                                class="slds-m-bottom_medium">
+                            </lightning-input>
 
+                            <!-- Current File Display -->
+                            <div class="slds-m-bottom_medium">
+                                <template if:true={uploadedFile}>
+                                    <p><strong>Attached File:</strong> {fileTitle}</p>
+                                    <template if:true={previewUrl}>
+                                        <p class="slds-m-top_small">
+                                            <a href={previewUrl} target="_blank" class="slds-button slds-button_outline-brand">
+                                                View Attached File
+                                            </a>
+                                        </p>
+                                    </template>
+                                    <template if:false={previewUrl}>
+                                        <p class="slds-text-color_error">
+                                            Unable to preview file. Please <a href={downloadLink} target="_blank">download it</a> instead.
+                                        </p>
+                                    </template>
+                                </template>
+                                <template if:false={uploadedFile}>
+                                    <p class="slds-m-top_medium"><strong>No file attached.</strong></p>
+                                </template>
+                            </div>
 
+                            <!-- Resource URL Input -->
+                            <div class="slds-m-bottom_medium">
+                                <label for="resourceUrlInput" class="modal-field-label">Resource URL</label>
+                                <input 
+                                    type="url" 
+                                    id="resourceUrlInput" 
+                                    value={resourceUrl} 
+                                    onchange={handleResourceUrlChange} 
+                                    class="slds-input" 
+                                    placeholder="https://..." 
+                                />
+                            </div>
 
+                            <!-- File Management -->
+                            <div class="slds-m-bottom_medium">
+                                <label class="label slds-m-bottom_small">Replace File</label>
+                                <input 
+                                    type="file" 
+                                    accept=".pdf,.docx,.png,.jpeg" 
+                                    onchange={handleReplaceFile} 
+                                    class="slds-file-selector__input"
+                                />
+                            </div>
 
-    
+                            <div class="slds-m-bottom_medium">
+                                <label for="fileUploadInput" class="modal-field-label">Upload New File</label>
+                                <input 
+                                    type="file" 
+                                    id="fileUploadInput" 
+                                    accept=".pdf,.docx,.png,.jpeg" 
+                                    onchange={handleFileChange} 
+                                    class="file-input" 
+                                />
+                            </div>
+                        </div>
+                    </template>
 
+                </div>
 
-
-
-                <template if:false={uploadedFile}>
-                    <p class="slds-m-top_medium"><strong>No file attached.</strong></p>
-                </template>
-
-                <label class="label slds-m-top_medium">Replace File</label>
-                <input type="file" accept=".pdf,.docx,.png,.jpeg" onchange={handleReplaceFile} />
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" onclick={closeModal}>Cancel</button>
+                    <template if:true={enableissubmitbutton}>
+                        <button class="slds-button slds-button_brand" onclick={submitCommentHandler}>Submit Comment</button>
+                    </template>
+                    <template if:false={isCompletedOrOverdue}>
+                        <button class="slds-button slds-button_brand" onclick={updateTask}>Save</button>
+                        <button class="slds-button slds-button_success" onclick={handleSubmitTask}>Submit Task</button>
+                    </template>
+                </footer>
             </div>
-            <footer class="slds-modal__footer">
-                <button class="slds-button slds-button_neutral" onclick={closeModal}>Cancel</button>
-                <button class="slds-button slds-button_brand" onclick={updateTask}>Save</button>
-            </footer>
-        </div>
-    </section>
-    <div class="slds-backdrop slds-backdrop_open"></div>
-</template>
-    
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <!-- 🔽 MAIN PAGE SECTION -->
     <div class="container">
-        <!-- Assign Task Form -->
         <div class="form-section">
             <div class="form-card">
                 <h2 class="heading">Assign Task</h2>
@@ -74,92 +166,97 @@
 
                 <label class="label">Status</label>
                 <select class="input" name="status" onchange={handleChange} required>
-                      <option value="" disabled selected>Select status</option>
-                      <template for:each={pickitems} for:item="items">
-                      <option key={items.value} value={items.value}>{items.label}</option>
-               </template>
-               </select>
-
+                    <option value="" disabled selected>Select status</option>
+                    <template for:each={pickitems} for:item="items">
+                        <option key={items.value} value={items.value}>{items.label}</option>
+                    </template>
+                </select>
 
                 <label class="label">Assign to Intern (Email or Name)</label>
                 <c-lookup onchange={handleChange} onrecordselected={handleInternSelected}></c-lookup>
 
                 <label class="label">Resource URL</label>
                 <input name="resourceUrl" type="url" onchange={handleChange} class="input" placeholder="https://..." />
+                <label class="label">YouTube Playlist Link</label>
+                <input 
+                      name="youtubeLink" 
+                       type="url" 
+                      onchange={handleChange} 
+                       class="input" 
+                       placeholder="https://www.youtube.com/playlist?list=..." 
+                />
 
-               <div class="slds-form-element slds-m-bottom_medium secondinput">
-                 <label class="slds-form-element__label namelabel">Upload Supporting Document</label>
-                     <div class="slds-form-element__control slds-input-has-icon fileupoad">
-                        <input accept=".pdf,.jpeg,.png.,docx,.doc" type="file" onchange={handleUploadFile} id="file" class=" hidden slds-input file" placeholder="Upload"/>
-                     </div>
-                 </div>
+
+                <div class="slds-form-element slds-m-bottom_medium secondinput">
+                    <label class="slds-form-element__label namelabel">Upload Supporting Document</label>
+                    <div class="slds-form-element__control slds-input-has-icon fileupoad">
+                        <input accept=".pdf,.jpeg,.png,.docx,.doc" type="file" onchange={handleUploadFile} id="file" class="hidden slds-input file" placeholder="Upload"/>
+                    </div>
+                </div>
 
                 <button class="submit-btn" onclick={assigntask}>Assign Task</button>
             </div>
         </div>
 
-        <!-- Task Preview or Dashboard -->
+        <!-- 🔽 TASK PREVIEW SECTION -->
         <div class="preview-section">
             <div class="form-card preview-card">
-           <h2 class="heading">Assigned Tasks</h2>
-    <div class="tabs">
-        <button class="tab" data-tab="Pending" onclick={handleTabChange}>Pending</button>
-        <button class="tab" data-tab="Completed" onclick={handleTabChange}>Completed</button>
-        <button class="tab" data-tab="Overdue" onclick={handleTabChange}>Overdue</button>
+                <h2 class="heading">Assigned Tasks</h2>
+                <div class="tabs">
+                    <button class="tab" data-tab="Pending" onclick={handleTabChange}>Pending</button>
+                    <button class="tab" data-tab="Completed" onclick={handleTabChange}>Completed</button>
+                    <button class="tab" data-tab="Overdue" onclick={handleTabChange}>Overdue</button>
+                </div>
+                <template if:true={filteredTasks}>
+                    <ul class="task-list">
+                        <template for:each={paginatedTasks} for:item="task">
+                            <li key={task.Id}
+                                class="task-card"
+                                data-id={task.Id}
+                                data-status={task.Status__c}
+                                onclick={handleTaskClick}>
+                                <div class="slds-grid slds-grid_align-spread">
+                                    <h3>{task.Name}</h3>
+                                    <template if:true={completedandoverdue}>
+                                        <button class="delete-button slds-p-horizontal_x-small"
+                                                onclick={handledeletetask}
+                                                data-id={task.Id}>
+                                            <lightning-icon icon-name="utility:delete"
+                                                            alternative-text="Delete"
+                                                            size="xx-small"
+                                                            data-id={task.Id}>
+                                            </lightning-icon>
+                                        </button>
+                                    </template>
+                                </div>
+                                <p>{task.Description__c}</p>
+                                <p><strong>Assigned To:</strong>
+                                    <template if:true={task.Assigned_Intern__r}>
+                                        {task.Assigned_Intern__r.First_Name__c}
+                                    </template>
+                                    <template if:false={task.Assigned_Intern__r}>
+                                        Not Assigned
+                                    </template>
+                                </p>
+                                <p><strong>Due:</strong> {task.Due_Date__c}</p>
+                            </li>
+                        </template>
+                    </ul>
+                </template>
+
+                <template if:true={paginationButtons}>
+                    <div class="slds-m-top_medium">
+                        <template for:each={paginationButtons} for:item="button">
+                            <button key={button.number}
+                                    class={button.cssClass}
+                                    data-page={button.number}
+                                    onclick={handlePageChange}>
+                                {button.number}
+                            </button>
+                        </template>
+                    </div>
+                </template>
+            </div>
+        </div>
     </div>
-    <template if:true={filteredTasks}>
-        <ul class="task-list">
-            <template for:each={paginatedTasks} for:item="task">
-
-                 <li key={task.Id}
-                 class="task-card"
-                 data-id={task.Id}
-                 data-status={task.Status__c}
-                    onclick={handleTaskClick}>
-                   <div class="slds-grid slds-grid_align-spread">
-        <h3>{task.Name}</h3>
-
-         <button class="delete-button slds-p-horizontal_x-small"
-                onclick={handledeletetask}
-                data-id={task.Id}>
-            <lightning-icon icon-name="utility:delete"
-                            alternative-text="Delete"
-                            size="xx-small"
-                            data-id={task.Id}>
-                            class="delete-icon">
-            </lightning-icon>
-        </button>
-    </div>
-
-                    <p>{task.Description__c}</p>
-                    <p><strong>Assigned To:</strong> 
-    <template if:true={task.Assigned_Intern__r}>
-        {task.Assigned_Intern__r.First_Name__c}
-    </template>
-    <template if:false={task.Assigned_Intern__r}>
-        Not Assigned
-    </template>
-</p>
-
-                    <p><strong>Due:</strong> {task.Due_Date__c}</p>
-                </li>
-            </template>
-        </ul>
-        
-    </template>
-    <template if:true={paginationButtons}>
-    <div class="slds-m-top_medium">
-        <template for:each={paginationButtons} for:item="button">
-            <button key={button.number}
-                    class={button.cssClass}
-                    data-page={button.number}
-                    onclick={handlePageChange}>
-                {button.number}
-            </button>
-        </template>
-    </div>
-</template>
-</div>
-</div>
-</div>
 </template>

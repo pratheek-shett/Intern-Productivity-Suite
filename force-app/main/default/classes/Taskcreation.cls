@@ -18,7 +18,7 @@ public without sharing class Taskcreation {
     public static List<Task_c__c> getStatus(){
         return [SELECT Id, Name, Status__c, Assigned_Intern__r.First_Name__c, 
                Assigned_Intern__r.Email__c, Due_Date__c, Resource_URL__c, 
-               Description__c, File_Public_URL_c__c  // ADD THIS FIELD
+               Description__c, File_Public_URL_c__c,Admincomment__c  // ADD THIS FIELD
         FROM Task_c__c 
         ORDER BY Due_Date__c ASC];
     }
@@ -119,7 +119,7 @@ public static void uploadFileToTask(String fileName, String base64Data, Id taskI
     ContentDocumentLink cdl = new ContentDocumentLink();
     cdl.ContentDocumentId = contentDocId;
     cdl.LinkedEntityId = taskId;
-    cdl.ShareType = 'I';
+    cdl.ShareType = 'V';
     cdl.Visibility = 'AllUsers';
     insert cdl;
 
@@ -193,7 +193,7 @@ public static void replaceFileOnTask(String fileName, String base64Data, Id task
     ContentDocumentLink cdl = new ContentDocumentLink();
     cdl.ContentDocumentId = contentDocId;
     cdl.LinkedEntityId = taskId;
-    cdl.ShareType = 'I';
+    cdl.ShareType = 'V';
     cdl.Visibility = 'AllUsers';
     insert cdl;
 
@@ -309,7 +309,7 @@ public static String uploadAndDistributeTaskFile(String base64Data, String fileN
             ContentDocumentLink cdl = new ContentDocumentLink();
             cdl.ContentDocumentId = contentDocId;
             cdl.LinkedEntityId = guestLinkId; // Use guest or fallback record
-            cdl.ShareType = 'I'; // 'I' works for guest
+            cdl.ShareType = 'V'; // 'I' works for guest
             cdl.Visibility = 'AllUsers';
             insert cdl;
         }
@@ -341,6 +341,14 @@ public static String uploadAndDistributeTaskFile(String base64Data, String fileN
 }
 
 
+
+//comment
+@AuraEnabled
+public static void submitAdminComment(Id taskId, String comment) {
+    Task_c__c taskToUpdate = [SELECT Id, Admincomment__c FROM Task_c__c WHERE Id = :taskId LIMIT 1];
+    taskToUpdate.Admincomment__c = comment;
+    update taskToUpdate;
+}
 
 //delete task
 
