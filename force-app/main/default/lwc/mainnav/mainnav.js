@@ -58,6 +58,9 @@ export default class Navigationbar extends NavigationMixin(LightningElement)  {
        navigateToTasks() {
            this.navigateTo('/interntask');  // CHANGED: Using new method
        }
+       navigateToLearningResources(){
+        this.navigateTo('/internplaylist');
+       }
    
        navigateToLeaves() {
            this.navigateTo('/interntask');  // CHANGED: Using new method

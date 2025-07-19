@@ -1,21 +1,41 @@
 <template>
-    <template if:true={videos}>
-        <div class="video-list">
-            <template for:each={videos} for:item="video">
-                <div key={video.videoId} class="video-card">
-                    <img src={video.thumbnailUrl} alt={video.title} />
-                    <p>{video.title}</p>
-                    <iframe width="100%" height="200"
-                        src={"https://www.youtube.com/embed/" + video.videoId}
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen>
-                    </iframe>
-                </div>
-            </template>
-        </div>
-    </template>
-    <template if:true={error}>
-        <p>Error loading videos.</p>
-    </template>
+    <div class="slds-p-around_medium">
+
+        <!-- Show selected video -->
+        <template if:true={selectedVideoId}>
+            <div class="video-player slds-m-bottom_medium">
+                <iframe
+                    width="100%"
+                    height="400"
+                    src={selectedVideoUrl}
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </template>
+
+        <!-- Show video list -->
+        <template if:true={videos}>
+            <div class="video-list slds-grid slds-wrap">
+                <template for:each={videos} for:item="video">
+                    <div
+                        key={video.videoId}
+                        class="video-item slds-col slds-size_1-of-2 slds-p-around_small"
+                        onclick={handleVideoClick}
+                        data-videoid={video.videoId}
+                        style="cursor: pointer; border: 1px solid #ddd; border-radius: 8px;">
+                        <img src={video.thumbnailUrl} alt={video.title} style="width: 100%; border-radius: 4px;" />
+                        <p class="slds-m-top_small slds-truncate" title={video.title}>{video.title}</p>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <!-- Error message -->
+        <template if:true={error}>
+            <p class="slds-text-color_error slds-text-body_regular">{error}</p>
+        </template>
+
+    </div>
 </template>

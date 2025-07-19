@@ -1,6 +1,6 @@
 public without sharing class Taskcreation {
     @AuraEnabled
-    public static Id Taskcreation(String title, String description, Date dueDate, String status, String internId, String resourceUrl, String assignedby, List<String>fileid) {
+    public static Id Taskcreation(String title, String description, Date dueDate, String status, String internId, String resourceUrl, String assignedby, String youtubeLink, List<String>fileid) {
         Task_c__c task = new Task_c__c();
         task.Name = title;
         task.Description__c = description;
@@ -9,6 +9,7 @@ public without sharing class Taskcreation {
         task.Assigned_Intern__c = internId;
         task.Resource_URL__c = resourceUrl;
         task.Task_Created_By__c = assignedby;
+        task.YouTube_Link_c__c = youtubeLink;
         insert task;
         System.debug(task.Id);
         return task.Id;

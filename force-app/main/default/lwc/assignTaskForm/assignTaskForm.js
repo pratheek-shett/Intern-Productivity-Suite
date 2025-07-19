@@ -41,7 +41,7 @@ export default class AssignTaskForm extends LightningElement {
     @track previewUrl;
     @track adminComment = '';
     @track pickitems = [];
-
+    @track youtubeLink = ''; 
     wiredTaskResult;
 
     connectedCallback() {
@@ -214,7 +214,8 @@ get modalTitle() {
         internId: this.selectedInternId,
         resourceUrl: this.resourceUrl,
         assignedby: this.assignedbyemail,
-        fileid: null 
+        fileid: null,
+        youtubeLink: this.youtubeLink
     }).then(createdTaskId => {
         // If a file was uploaded, call the CORRECT Apex method
         if (this.base64FileData && this.fileName) {
