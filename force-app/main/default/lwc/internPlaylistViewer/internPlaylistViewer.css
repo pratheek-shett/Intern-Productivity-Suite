@@ -1,5 +1,30 @@
-.video-card {
-    margin: 10px;
-    padding: 10px;
-    border: 1px solid #ddd;
+.spinner-container {
+    position: relative;
+    height: 15rem; /* Give spinner some space to show up in */
+}
+
+.video-tile {
+    cursor: pointer;
+    border: 1px solid #dddbda; /* SLDS border color */
+    border-radius: 0.25rem;
+    background-color: white;
+    padding: 1rem;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    height: 100%;
+}
+
+.video-tile:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.video-thumbnail {
+    width: 100%;
+    border-radius: 0.25rem;
+    aspect-ratio: 16 / 9; /* Ensures consistent image shape */
+    object-fit: cover;
+}
+
+.video-title {
+    font-weight: bold;
 }
