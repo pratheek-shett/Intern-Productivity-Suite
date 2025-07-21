@@ -1,0 +1,66 @@
+<template>
+    <c-mainnav></c-mainnav>
+
+    <template if:true={showToast}>
+        <c-toast title={toastTitle} message={toastMessage} variant={toastVariant}></c-toast>
+    </template>
+
+    <div class="page-wrapper">
+        <div class="form-card">
+            <div class="form-header">
+                <h1 class="form-title">Submit a Leave Request</h1>
+                <p class="form-subtitle">Apply Request for Getting a Leave</p>
+            </div>
+
+            <div class="form-body">
+                <lightning-input
+                    label="Employee Email"
+                    placeholder="Provide email address"
+                    class="form-input"
+                    value={email}
+                    onchange={handleNameChange}>
+                </lightning-input>
+
+                <lightning-input
+                    type="date"
+                    label="Date of Leave"
+                    class="form-input"
+                    value={leaveDate}
+                    onchange={handleDateChange}>
+                </lightning-input>
+
+                <lightning-textarea
+                    label="Description"
+                    placeholder="Reason of Leave"
+                    class="form-input"
+                    value={reason}
+                    onchange={handleDescriptionChange}>
+                </lightning-textarea>
+            </div>
+
+            <div class="form-footer">
+                <button class="submit-button" onclick={submitRequest}>Submit Request</button>
+            </div>
+        </div>
+
+        <template if:true={leaveRequests.length}>
+            <div class="form-card slds-m-top_medium">
+                <div class="form-header">
+                    <h2 class="form-title">Your Leave Requests</h2>
+                </div>
+                <div class="form-body">
+                    <template for:each={leaveRequests} for:item="req">
+                        <div key={req.Id} class="leave-card">
+                            <p><strong>Date:</strong> {req.Leave_Date__c}</p>
+                            <p>
+                             <strong>Status:</strong>
+                            <span class={req.statusClass}>{req.Status__c}</span>
+                              </p>
+                            <p><strong>Description:</strong> {req.Description__c}</p>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>

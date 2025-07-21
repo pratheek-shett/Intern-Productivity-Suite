@@ -1,0 +1,208 @@
+/* --- Page Layout & Header --- */
+.page-container {
+    padding: 2.5rem 2rem;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+.page-header { margin-bottom: 2rem; }
+.page-title { font-size: 2rem; font-weight: 700; color: #181818; }
+.page-subtitle { font-size: 1.1rem; color: #6c757d; margin-top: 0.25rem; }
+
+/* --- Intern Card Grid --- */
+.intern-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+/* --- Cool & Minimal Search Bar --- */
+
+
+
+/* When the container is focused (i.e., you click on it)... */
+
+
+/* --- Small Profile Card --- */
+.intern-card {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #e9ecef;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+.intern-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+}
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1rem;
+    border: 4px solid #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.intern-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #212529;
+    margin: 0;
+}
+.intern-designation {
+    font-size: 0.95rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+    margin-bottom: 1.5rem;
+}
+.view-profile-button {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid #4f46e5;
+    background-color: #f0f5ff;
+    color: #4338ca;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.view-profile-button:hover {
+    background-color: #4f46e5;
+    color: #ffffff;
+}
+
+/* --- Modal Styles --- */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(10, 10, 10, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+.modal {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    width: 90%;
+    max-width: 600px;
+    animation: fadeIn 0.3s ease;
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e9ecef;
+}
+.modal-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+.close-button {
+    background: #f1f3f5;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal-body {
+    padding: 2rem;
+    text-align: center;
+}
+.modal-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1rem;
+    border: 5px solid #fff;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+}
+.modal-intern-name { font-size: 1.75rem; font-weight: 700; color: #212529; }
+.modal-intern-designation { font-size: 1.1rem; color: #6c757d; margin-top: 0.25rem; margin-bottom: 2rem; }
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    text-align: left;
+}
+.detail-item {
+    display: flex;
+    flex-direction: column;
+}
+.detail-label {
+    font-size: 0.8rem;
+    color: #adb5bd;
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+}
+.detail-value {
+    font-size: 1rem;
+    color: #343a40;
+    font-weight: 500;
+}
+.detail-full-width {
+    grid-column: 1 / -1;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+/* --- Cool & Minimal Search Bar --- */
+.search-wrapper {
+    position: relative;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon {
+    position: absolute;
+    left: 1rem;
+    /* This makes the icon clickable and ensures it's above the input background */
+    z-index: 1; 
+    pointer-events: none; /* Allows clicks to pass through to the input */
+    --sds-c-icon-color-foreground-default: #6c757d;
+    transition: color 0.3s ease;
+}
+
+.search-input {
+    /* Collapsed State */
+    width: 48px;
+    height: 48px;
+    border-radius: 99px; /* Perfect circle */
+    
+    /* General Styles */
+    border: 1px solid #e9ecef;
+    background-color: #ffffff;
+    padding-left: 2.75rem; /* Make space for the icon */
+    font-size: 1rem;
+    color: #343a40;
+    outline: none; /* Removes the default blue outline on focus */
+    
+    /* Smooth animation */
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Expanded State (on focus) */
+.search-input:focus {
+    width: 350px;
+    border-color: #4f46e5;
+    box-shadow: 0 5px 15px rgba(79, 70, 229, 0.1);
+}
+
+/* When the input is focused, also change the icon color */
+.search-input:focus ~ .search-icon {
+    --sds-c-icon-color-foreground-default: #4f46e5;
+}

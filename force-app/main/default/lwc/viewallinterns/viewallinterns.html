@@ -1,0 +1,81 @@
+<template>
+    <c-adminnavigationbar></c-adminnavigationbar>
+
+    <div class="page-container">
+        <div class="page-header">
+            <h1 class="page-title">Registered Interns</h1>
+            <p class="page-subtitle">A directory of all active interns in the program.</p>
+        </div>
+
+        <div class="search-wrapper">
+        <lightning-icon icon-name="utility:search" size="small" class="search-icon"></lightning-icon>
+        <input
+            type="text"
+            class="search-input"
+            placeholder="Search by name or email..."
+            oninput={handleSearchChange}
+        />
+    </div>
+
+        <template if:true={isLoading}>
+            <div class="spinner-container">
+                <lightning-spinner alternative-text="Loading..." variant="brand" size="large"></lightning-spinner>
+            </div>
+        </template>
+        
+        <div class="intern-grid">
+            <template for:each={filteredInterns} for:item="intern">
+                <div key={intern.Id} class="intern-card">
+                    <img src={intern.Profile_Image_URL__c} alt="Profile" class="profile-avatar"/>
+                    <h2 class="intern-name">{intern.First_Name__c} {intern.Last_Name__c}</h2>
+                    <p class="intern-designation">{intern.Designation__c}</p>
+                    <button class="view-profile-button" data-id={intern.Id} onclick={handleViewProfile}>
+                        View Profile
+                    </button>
+                </div>
+            </template>
+        </div>
+
+        <template if:true={selectedIntern}>
+            <div class="modal-backdrop" onclick={closeModal}>
+                <div class="modal" onclick={handleModalClick}>
+                    <div class="modal-header">
+                        <h2 class="modal-title">Intern Profile</h2>
+                        <button class="close-button" onclick={closeModal}>
+                            <lightning-icon icon-name="utility:close" size="small" alternative-text="Close"></lightning-icon>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <img src={selectedIntern.Profile_Image_URL__c} alt="Profile" class="modal-avatar"/>
+                        <h3 class="modal-intern-name">{selectedIntern.First_Name__c} {selectedIntern.Last_Name__c}</h3>
+                        <p class="modal-intern-designation">{selectedIntern.Designation__c}</p>
+                        
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <span class="detail-label">Email</span>
+                                <span class="detail-value">{selectedIntern.Email__c}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Phone</span>
+                                <span class="detail-value">{selectedIntern.Phone__c}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Joining Date</span>
+                                <span class="detail-value">{selectedIntern.formattedJoiningDate}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">End Date</span>
+                                <span class="detail-value">{selectedIntern.formattedEndDate}</span>
+                            </div>
+                            <div class="detail-item detail-full-width">
+                                <span class="detail-label">Address</span>
+                                <span class="detail-value">{selectedIntern.Address__c}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>

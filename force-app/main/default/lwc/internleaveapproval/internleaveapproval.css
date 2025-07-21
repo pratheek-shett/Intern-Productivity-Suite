@@ -1,0 +1,263 @@
+/* --- Page Layout & Background --- */
+
+.page-wrapper {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 100vh;
+
+    background-color: #f0f2f5;
+    /* A soft, modern background */
+
+    font-family: 'Poppins', sans-serif;
+
+    padding: 2rem;
+
+}
+
+
+
+/* --- Form Card Styling --- */
+
+.form-card {
+
+    background: #ffffff;
+
+    border-radius: 16px;
+    /* Softer, rounded corners */
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+    /* A soft, premium shadow */
+
+    max-width: 500px;
+
+    width: 100%;
+
+    overflow: hidden;
+    /* Ensures the border-radius affects children */
+
+}
+
+
+
+/* --- Header & Typography --- */
+
+.form-header {
+
+    padding: 2rem 2rem 1.5rem 2rem;
+
+    text-align: center;
+
+}
+
+.status-pending {
+
+    color: #f59e0b;
+    /* amber-500 */
+
+    font-weight: 600;
+
+}
+
+.status-accepted {
+
+    color: #10b981;
+    /* emerald-500 */
+
+    font-weight: 600;
+
+}
+
+.status-rejected {
+
+    color: #ef4444;
+    /* red-500 */
+
+    font-weight: 600;
+
+}
+
+
+
+.form-title {
+
+    font-size: 1.75rem;
+    /* Larger, more impactful title */
+
+    font-weight: 600;
+
+    color: #1e293b;
+    /* A dark, soft black */
+
+    margin: 0;
+
+}
+
+
+
+.form-subtitle {
+
+    font-size: 1rem;
+
+    font-weight: 400;
+
+    color: #64748b;
+    /* A lighter gray for the subtitle */
+
+    margin-top: 0.5rem;
+
+}
+
+
+
+/* --- Form Body & Inputs --- */
+
+.form-body {
+
+    padding: 0 2rem;
+
+}
+
+
+
+/* This targets our lightning-input and lightning-textarea components */
+
+.form-input {
+
+    margin-bottom: 1.5rem;
+
+}
+
+
+
+/* * This uses LWC Styling Hooks to create a modern "bottom-border" input style.
+
+ * It's much cleaner than the default box.
+
+*/
+
+.form-input {
+
+    --lwc-borderWidth: 0;
+    /* Remove side and top borders */
+
+    --lwc-borderRadius: 0;
+
+    --lwc-borderWidthBottom: 2px;
+    /* Set a 2px bottom border */
+
+    --lwc-borderColor: #e2e8f0;
+    /* Light gray border */
+
+    --lwc-colorBackground: transparent;
+
+    --lwc-padding: 0.5rem 0;
+    /* Adjust padding for the new style */
+
+    transition: border-color 0.3s ease;
+    /* Smooth transition on focus */
+
+}
+
+
+
+/* When the user clicks into the input, the bottom border changes color */
+
+.form-input:focus-within {
+
+    --lwc-borderColor: #4f46e5;
+    /* A vibrant indigo on focus */
+
+}
+
+
+
+/* Style the input's label */
+
+.form-input label.slds-form-element__label {
+
+    font-weight: 500;
+
+    color: #334155;
+
+}
+
+
+
+/* --- Footer & Submit Button --- */
+
+.form-footer {
+
+    padding: 1.5rem 2rem 2rem 2rem;
+
+}
+
+
+
+.submit-button {
+
+    width: 100%;
+
+    padding: 0.9rem;
+
+    border: none;
+
+    border-radius: 8px;
+
+    font-family: 'Poppins', sans-serif;
+
+    font-size: 1rem;
+
+    font-weight: 600;
+
+    color: #ffffff;
+
+    cursor: pointer;
+
+
+
+    /* The beautiful gradient background */
+
+    background-image: linear-gradient(45deg, #4f46e5, #7c3aed);
+
+
+
+    /* A subtle shadow to make the button "pop" */
+
+    box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+
+
+
+    /* Smooth transitions for all properties on hover */
+
+    transition: all 0.3s ease;
+
+}
+
+
+
+/* The button becomes slightly brighter and lifts up on hover */
+
+.submit-button:hover {
+
+    background-image: linear-gradient(45deg, #6366f1, #8b5cf6);
+
+    box-shadow: 0 7px 20px rgba(100, 102, 241, 0.5);
+
+    transform: translateY(-3px);
+    /* Lifts the button */
+
+}
+
+
+
+.submit-button:active {
+
+    transform: translateY(-1px);
+    /* A subtle "press" effect */
+
+}

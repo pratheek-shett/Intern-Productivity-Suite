@@ -1,6 +1,64 @@
 <template>
-    <c-mainnav></c-mainnav>
-    <div class="--slds-g-color-border-2">
-        <h1> Hello ebdkjebfkj3bfkjr3bkjfbrkjbkfjrb3kfbk3rbfb33</h1>
+    <c-adminnavigationbar></c-adminnavigationbar>
+
+    <div class="page-container">
+        <div class="page-header">
+            <h1 class="page-title">Admin Dashboard</h1>
+            <p class="page-subtitle">An overview of intern engagement and activity.</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <p class="stat-label">Total Interns</p>
+                <p class="stat-value">{totalInterns}</p>
+                <lightning-icon icon-name="utility:groups" size="large" class="stat-icon icon-total"></lightning-icon>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">Active Interns</p>
+                <p class="stat-value">{activeInterns}</p>
+                <lightning-icon icon-name="utility:check" size="large" class="stat-icon icon-active"></lightning-icon>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">Inactive Interns</p>
+                <p class="stat-value">{inactiveInterns}</p>
+                <lightning-icon icon-name="utility:user_off" size="large" class="stat-icon icon-inactive"></lightning-icon>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">Pending Leaves</p>
+                <p class="stat-value">{pendingLeaves}</p>
+                <lightning-icon icon-name="utility:note" size="large" class="stat-icon icon-pending"></lightning-icon>
+            </div>
+        </div>
+
+        <div class="spotlight-list">
+            <div class="spotlight-item">
+                <div class="spotlight-icon-wrapper icon-active">
+                    <lightning-icon icon-name="utility:trending_up" size="small"></lightning-icon>
+                </div>
+                <div class="spotlight-text">
+                    <p class="spotlight-label">Most Active Intern</p>
+                    <template if:true={mostActiveIntern}>
+                        <p class="spotlight-name">{mostActiveIntern.First_Name__c} {mostActiveIntern.Last_Name__c}</p>
+                    </template>
+                    <template if:false={mostActiveIntern}>
+                        <p class="spotlight-name">No data found</p>
+                    </template>
+                </div>
+            </div>
+            <div class="spotlight-item">
+                <div class="spotlight-icon-wrapper icon-inactive">
+                    <lightning-icon icon-name="utility:trending_down" size="small"></lightning-icon>
+                </div>
+                <div class="spotlight-text">
+                    <p class="spotlight-label">Most Inactive Intern</p>
+                    <template if:true={mostInactive}>
+                        <p class="spotlight-name">{mostInactive.First_Name__c} {mostInactive.Last_Name__c}</p>
+                    </template>
+                    <template if:false={mostInactive}>
+                        <p class="spotlight-name">No data found</p>
+                    </template>
+                </div>
+            </div>
+        </div>
     </div>
 </template>

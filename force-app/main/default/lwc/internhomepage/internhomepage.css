@@ -1,6 +1,5 @@
 .page-container {
     position: relative;
-    min-height: 100vh;
     background-color: white;
     padding-bottom: 2rem; /* Added bottom spacing */
 }
@@ -9,6 +8,281 @@
     font-family: 'Poppins';
     src: url('/resource/PoppinsBold.ttf') format('ttf');
     font-weight: 700;
+}
+
+.floating-chat-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.floating-chat-button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0176d3, #005fb2);
+    box-shadow: 0 4px 20px rgba(1, 118, 211, 0.4);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.floating-chat-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(1, 118, 211, 0.6);
+}
+
+.chat-icon {
+    color: white;
+    z-index: 1;
+}
+
+.pulse-ring {
+    position: absolute;
+    border: 2px solid #0176d3;
+    border-radius: 50%;
+    height: 100%;
+    width: 100%;
+    animation: pulsate 2s ease-out infinite;
+    opacity: 0;
+}
+
+@keyframes pulsate {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(1.4); opacity: 0; }
+}
+.floating-chat-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.chat-window {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 350px;
+    height: 500px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    z-index: 10000;
+}
+
+.chat-header {
+    background-color: #08154A; /* Dark Blue */
+    color: white;
+    padding: 10px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+}
+
+.chat-title {
+    margin-left: 8px;
+    font-weight: bold;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+/* --- Dashboard Grid Layout --- */
+.dashboard-grid {
+    display: grid;
+    /* This creates responsive columns that are at least 350px wide */
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem; /* The space between the cards */
+    padding: 1rem 0;
+}
+
+/* --- Custom Card Styling --- */
+.info-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e7e5e4; /* A soft border */
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    border-color: #d6d3d1;
+}
+
+/* --- Card Header & Icons --- */
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.card-icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    --sds-c-icon-color-foreground-default: #ffffff;
+}
+/* Unique colors for each card's icon */
+.icon-tasks { background-color: #4f46e5; }
+.icon-deadline { background-color: #db2777; }
+.icon-leave { background-color: #16a34a; }
+
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+/* --- Card Body & Content --- */
+.card-body {
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+}
+.item-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1c1917;
+}
+.item-description {
+    font-size: 0.95rem;
+    color: #78716c;
+    margin-top: 0.5rem;
+    flex-grow: 1; /* Pushes the footer down */
+}
+.item-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f5f5f4;
+}
+.item-detail {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.9rem;
+    color: #a8a29e;
+    font-weight: 500;
+}
+.item-detail .detail-icon {
+    --sds-c-icon-color-foreground-default: #a8a29e;
+}
+.item-detail.urgent {
+    color: #ef4444;
+    font-weight: 600;
+}
+.item-detail.urgent .detail-icon {
+    --sds-c-icon-color-foreground-default: #ef4444;
+}
+
+.empty-state {
+    color: #a8a29e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+
+/* --- Reusable Status Badge Styles --- */
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 99px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.status-pending {
+    color: #92400e; background-color: #fef9c3;
+}
+.status-approved {
+    color: #166534; background-color: #dcfce7;
+}
+.status-rejected {
+    color: #991b1b; background-color: #fee2e2;
+}
+
+.chat-body {
+    flex-grow: 1;
+    overflow-y: auto;
+    position: relative; /* Required for the bot to anchor correctly */
+}
+.chat-window {
+    width: 350px;
+    height: 500px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.chat-header {
+    background: linear-gradient(135deg, #0176d3, #005fb2);
+    color: white;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.chat-title {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.chat-body {
+    flex: 1;
+    overflow-y: auto;
+    background-color: #f8f9fa;
 }
 
 

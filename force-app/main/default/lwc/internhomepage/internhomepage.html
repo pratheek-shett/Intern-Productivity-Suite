@@ -20,6 +20,81 @@
             </lightning-avatar> 
         </div>
     </div>
+ <div class="dashboard-grid">
+
+    <div class="info-card">
+        <div class="card-header">
+            <div class="card-icon icon-tasks">
+                <lightning-icon icon-name="utility:task" size="small"></lightning-icon>
+            </div>
+            <h3 class="card-title">Latest Assigned Task</h3>
+        </div>
+        <div class="card-body">
+            <template if:true={latestTask}>
+                <h4 class="item-name">{latestTask.Name}</h4>
+                <p class="item-description">{latestTask.Description__c}</p>
+                <div class="item-footer">
+                    <span class={latestTask.statusClass}>{latestTask.Status__c}</span>
+                    <div class="item-detail">
+                        <lightning-icon icon-name="utility:event" size="x-small" class="detail-icon"></lightning-icon>
+                        <span>Due: {latestTask.formattedDueDate}</span>
+                    </div>
+                </div>
+            </template>
+            <template if:false={latestTask}>
+                <div class="empty-state">No recent task found.</div>
+            </template>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="card-header">
+            <div class="card-icon icon-deadline">
+                <lightning-icon icon-name="utility:warning" size="small"></lightning-icon>
+            </div>
+            <h3 class="card-title">Nearest Deadline</h3>
+        </div>
+        <div class="card-body">
+            <template if:true={upcomingTask}>
+                <h4 class="item-name">{upcomingTask.Name}</h4>
+                <p class="item-description">{upcomingTask.Description__c}</p>
+                <div class="item-footer">
+                    <span class={upcomingTask.statusClass}>{upcomingTask.Status__c}</span>
+                    <div class="item-detail urgent">
+                        <lightning-icon icon-name="utility:event" size="x-small" class="detail-icon"></lightning-icon>
+                        <span>Due: {upcomingTask.formattedDueDate}</span>
+                    </div>
+                </div>
+            </template>
+            <template if:false={upcomingTask}>
+                <div class="empty-state">No upcoming deadlines.</div>
+            </template>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="card-header">
+            <div class="card-icon icon-leave">
+                <lightning-icon icon-name="utility:date_input" size="small"></lightning-icon>
+            </div>
+            <h3 class="card-title">Leave Request Status</h3>
+        </div>
+        <div class="card-body">
+            <template if:true={recentLeave}>
+                <p class="item-description">{recentLeave.Description__c}</p>
+                <div class="item-footer">
+                    <span class={recentLeave.statusClass}>{recentLeave.Status__c}</span>
+                    <div class="item-detail">
+                        <lightning-icon icon-name="utility:event" size="x-small" class="detail-icon"></lightning-icon>
+                        <span>On: {recentLeave.formattedLeaveDate}</span>
+                    </div>
+                </div>
+            </template>
+            <template if:false={recentLeave}>
+                <div class="empty-state">No recent leave requests.</div>
+            </template>
+        </div>
+    </div>
 
     <!-- Profile Modal -->
     <template if:true={showProfileModal}>
@@ -97,7 +172,21 @@
                     </div>
                 </div>
             </div>
+            <div lwc:dom="manual" class="bot-container">
+                
+            </div>
         </section>
         <div class="slds-backdrop slds-backdrop_open"></div>
     </template>
+
+    <!-- MOVED OUTSIDE: Floating Chat Button -->
+
+    
+<template if:true={showChatWindow}>
+    <div class="chat-window">
+        </div>
+  </template>
+ 
+</div>
+
 </template>

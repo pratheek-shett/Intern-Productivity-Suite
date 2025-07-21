@@ -1,100 +1,130 @@
-import { LightningElement, track, api } from 'lwc';
+import { LightningElement, track } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import getInternProfile from '@salesforce/apex/Internprofiledetails.getInternProfile';
-import getProfileImageUrl from '@salesforce/apex/Internprofiledetails.getProfileImageUrl';
 import createProfileImagePublicUrl from '@salesforce/apex/Internprofiledetails.createProfileImagePublicUrl';
+import getInternHomeData from '@salesforce/apex/internhome.getInternHomeData'; // Apex for dashboard data
 
 export default class Internhomepage extends NavigationMixin(LightningElement) {
-    imageurl = 'https://mitmanipal3-dev-ed.develop.my.salesforce.com/sfc/p/WU00000FgGe1/a/WU0000004pQX/_ZQOC0pksg3hpZ1jystAtyYSThyvE.h72gtMqJvElq8';
-    @track welcomeName;
-    @track isLoading = true;
-    @track showProfileModal = false;
-    @track internemail = '';
+    // --- Profile Properties ---
     @track firstname;
     @track profiledata = {};
     @track profileurl;
-    @track profilePictureId;
+    @track remainingDays = 0;
     @track formattedDob = '';
     @track formattedJoiningDate = '';
     @track formattedEndDate = '';
-    @track remainingDays = 0;
+    
+    // --- Dashboard Card Properties ---
+    @track latestTask;
+    @track upcomingTask;
+    @track recentLeave;
 
-    async connectedCallback() {
+    // --- UI Control Properties ---
+    @track isLoading = true;
+    @track showProfileModal = false;
+    @track showChatWindow = false;
+    chatInitialized = false;
+
+    connectedCallback() {
         const emailid = sessionStorage.getItem('interndata')?.trim();
-        console.log('Session email:', emailid);
         if (emailid) {
-            getInternProfile({ email: emailid })
-                .then((result) => {
-                    if (result) {
-                        this.profiledata = result;
-                        this.firstname = result.First_Name__c;
-                        this.profilePictureId = result.Profile_Picture_ID__c;
-                        
-                        if (this.profilePictureId) {
-                            this.fetchProfileImage();
-                        }
-                        this.calculateRemainingDays(result.End_Date__c);
-                        this.formatDates(result);
-                    } else {
-                        this.firstname = 'Intern';
-                    }
-                    this.internemail = emailid;
-                    this.isLoading = false;
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                    this.firstname = 'Intern';
-                    this.internemail = emailid;
-                    this.isLoading = false;
-                });
+            this.loadInitialData(emailid);
         } else {
+            console.warn('No email found in sessionStorage');
             this.firstname = 'Intern';
             this.isLoading = false;
         }
+    }
+
+    // --- Data Loading ---
+    async loadInitialData(emailid) {
+        this.isLoading = true;
+        try {
+            // Use Promise.all to fetch profile and dashboard data concurrently for faster loading
+            const [profileResult, homeDataResult] = await Promise.all([
+                getInternProfile({ email: emailid }),
+                getInternHomeData({ email: emailid })
+            ]);
+
+            // Process Profile Data
+            if (profileResult) {
+                this.profiledata = profileResult;
+                this.firstname = profileResult.First_Name__c;
+                if (profileResult.Profile_Picture_ID__c) {
+                    this.fetchProfileImage(profileResult.Profile_Picture_ID__c);
+                }
+                this.calculateRemainingDays(profileResult.End_Date__c);
+                this.formatDates(profileResult);
+            } else {
+                this.firstname = 'Intern';
+            }
+
+            // Process Dashboard Data using the new helper methods
+            this.latestTask = this.processTaskData(homeDataResult.latestTask);
+            this.upcomingTask = this.processTaskData(homeDataResult.upcomingTask);
+            this.recentLeave = this.processLeaveData(homeDataResult.recentLeave);
+
+        } catch (error) {
+            console.error('Error fetching initial data:', error);
+            this.firstname = 'Intern'; // Set a default name on error
+        } finally {
+            this.isLoading = false; // Stop loading spinner regardless of success or error
+        }
+    }
+    
+    // --- Data Processing Helpers (The new JS changes go here) ---
+
+    processTaskData(task) {
+        if (!task) return null;
+        return {
+            ...task,
+            statusClass: this.getStatusClass(task.Status__c),
+            formattedDueDate: this.formatDate(task.Due_Date__c)
+        };
+    }
+
+    processLeaveData(leave) {
+        if (!leave) return null;
+        return {
+            ...leave,
+            statusClass: this.getStatusClass(leave.Status__c),
+            formattedLeaveDate: this.formatDate(leave.Leave_Date__c)
+        };
+    }
+
+    getStatusClass(status) {
+        if (!status) return 'status-badge';
+        const lowerStatus = status.toLowerCase();
+
+        if (lowerStatus.includes('pending') || lowerStatus.includes('progress')) {
+            return 'status-badge status-pending';
+        } else if (lowerStatus.includes('completed') || lowerStatus.includes('approved')) {
+            return 'status-badge status-approved';
+        } else if (lowerStatus.includes('cancelled') || lowerStatus.includes('rejected')) {
+            return 'status-badge status-rejected';
+        }
+        return 'status-badge';
+    }
+
+    // --- Profile & Date Formatting ---
+
+    fetchProfileImage(profilePictureId) {
+        createProfileImagePublicUrl({ contentDocumentId: profilePictureId })
+            .then(publicUrl => {
+                this.profileurl = publicUrl;
+            })
+            .catch(error => {
+                console.error('Error creating public URL:', error);
+            });
     }
 
     calculateRemainingDays(endDate) {
         if (endDate) {
             const today = new Date();
             const end = new Date(endDate);
-            this.remainingDays = Math.ceil((end - today) / (1000 * 60 * 60 * 24));
+            const diffTime = end - today;
+            this.remainingDays = Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
         }
-    }
-
-    fetchProfileImage() {
-        if (this.profilePictureId) {
-            console.log('Fetching profile image for ID:', this.profilePictureId);
-            
-            // First try to get an existing URL (cacheable)
-            getProfileImageUrl({ contentDocumentId: this.profilePictureId })
-                .then(url => {
-                    console.log('Retrieved URL:', url);
-                    if (url) {
-                        this.profileurl = url;
-                        // Check if it's an internal URL and we need a public one
-                        if (url.includes('/sfc/servlet.shepherd/')) {
-                            this.createPublicUrl();
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching profile image URL:', error);
-                });
-        }
-    }
-    
-    createPublicUrl() {
-        // Create a public URL if needed (non-cacheable)
-        createProfileImagePublicUrl({ contentDocumentId: this.profilePictureId })
-            .then(publicUrl => {
-                console.log('Created public URL:', publicUrl);
-                if (publicUrl) {
-                    this.profileurl = publicUrl;
-                }
-            })
-            .catch(error => {
-                console.error('Error creating public URL:', error);
-            });
     }
 
     formatDates(profileData) {
@@ -102,13 +132,14 @@ export default class Internhomepage extends NavigationMixin(LightningElement) {
         this.formattedJoiningDate = this.formatDate(profileData.Joining_Date__c);
         this.formattedEndDate = this.formatDate(profileData.End_Date__c);
     }
-
-    formatDate(dateString) {
-        if (!dateString) return '';
-        const date = new Date(dateString);
-        return date.toLocaleDateString();
+    
+    formatDate(dateStr) {
+        if (!dateStr) return '';
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        return new Date(dateStr).toLocaleDateString('en-US', options);
     }
 
+    // --- Modal & Chat Handlers ---
     handleAvatarClick() {
         this.showProfileModal = true;
     }

@@ -52,7 +52,7 @@ export default class Adminnavigationbar extends NavigationMixin(LightningElement
     }
 
     navigateToDashboard() {
-        this.navigateTo('/taskmanagement');  // CHANGED: Using new method
+        this.navigateTo('/adminhomepage');  // CHANGED: Using new method
     }
 
     navigateToTasks() {
@@ -60,7 +60,7 @@ export default class Adminnavigationbar extends NavigationMixin(LightningElement
     }
 
     navigateToLeaves() {
-        this.navigateTo('/taskmanagement');  // CHANGED: Using new method
+        this.navigateTo('/adminleavemanagement');  // CHANGED: Using new method
     }
 
     navigateToRegisterIntern() {
@@ -69,7 +69,7 @@ export default class Adminnavigationbar extends NavigationMixin(LightningElement
     }
 
     navigateToViewInterns() {
-        this.navigateTo('/taskmanagement');  // CHANGED: Using new method
+        this.navigateTo('/viewallinterns');  // CHANGED: Using new method
         this.showMobileMenu = false;
     }
 

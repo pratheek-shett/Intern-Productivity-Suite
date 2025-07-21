@@ -52,7 +52,7 @@ export default class Navigationbar extends NavigationMixin(LightningElement)  {
        }
    
        navigateToDashboard() {
-           this.navigateTo('/interntask');  // CHANGED: Using new method
+           this.navigateTo('/internhomepage');  // CHANGED: Using new method
        }
    
        navigateToTasks() {
@@ -63,7 +63,7 @@ export default class Navigationbar extends NavigationMixin(LightningElement)  {
        }
    
        navigateToLeaves() {
-           this.navigateTo('/interntask');  // CHANGED: Using new method
+           this.navigateTo('/internleaverequest');  // CHANGED: Using new method
        }
    
        navigateToRegisterIntern() {

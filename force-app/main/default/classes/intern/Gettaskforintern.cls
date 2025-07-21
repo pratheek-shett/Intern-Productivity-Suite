@@ -5,7 +5,7 @@ public without sharing class Gettaskforintern {
             SELECT Id, Name, Description__c, Due_Date__c, Status__c,
                    File_Public_URL_c__c, Resource_URL__c,
                    Assigned_Intern__r.First_Name__c,
-                   Admincomment__c,YouTube_Link_c__c
+                   Admincomment__c,YouTube_Link_c__c,Task_Created_By__c 
             FROM Task_c__c
             WHERE Assigned_Intern__r.Email__c = :internEmail
             ORDER BY Due_Date__c ASC

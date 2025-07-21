@@ -1,0 +1,53 @@
+<template>
+    <c-adminnavigationbar></c-adminnavigationbar>
+
+    <div class="page-container">
+        <div class="page-header">
+            <h1 class="page-title">Leave Requests</h1>
+        </div>
+
+        <template if:true={isLoading}>
+            <div class="spinner-container">
+                <lightning-spinner alternative-text="Loading..." variant="brand" size="large"></lightning-spinner>
+            </div>
+        </template>
+
+        <div class="request-grid">
+            <template for:each={leaveRequests} for:item="req">
+                <div key={req.Id} class="request-card">
+                    
+                    <div class="card-header">
+                        <p class="card-title">{req.Employee_Email__c}</p>
+                        <span class={req.statusClass}>{req.Status__c}</span>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="card-detail">
+                            <lightning-icon icon-name="utility:event" size="x-small" class="detail-icon"></lightning-icon>
+                            <span class="detail-text">{req.formattedDate}</span>
+                        </div>
+                        <div class="card-detail">
+                            <lightning-icon icon-name="utility:text" size="x-small" class="detail-icon"></lightning-icon>
+                            <p class="detail-text">{req.Description__c}</p>
+                        </div>
+                    </div>
+
+                    <template if:true={req.canAct}>
+                        <div class="card-footer">
+                            <button class="action-button reject-button" data-id={req.Id} onclick={handleReject}>Reject</button>
+                            <button class="action-button approve-button" data-id={req.Id} onclick={handleApprove}>Approve</button>
+                        </div>
+                    </template>
+                </div>
+            </template>
+        </div>
+
+        <template if:false={hasRequests}>
+            <div class="empty-state">
+                <img src="/_slds/images/empty-states/empty-state-tasks.svg" alt="No leave requests" />
+                <h2 class="empty-state-title">All Caught Up</h2>
+                <p class="empty-state-text">There are currently no pending leave requests to review.</p>
+            </div>
+        </template>
+    </div>
+</template>

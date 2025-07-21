@@ -1,0 +1,104 @@
+/* --- Page Layout & Header --- */
+.page-container {
+    padding: 2.5rem 2rem;
+    background-color: #f8f9fa;
+}
+.page-header { 
+    margin-bottom: 2rem; 
+}
+.page-title { 
+    font-size: 2rem; 
+    font-weight: 700; 
+    color: #181818; 
+}
+.page-subtitle { 
+    font-size: 1.1rem; 
+    color: #6c757d; 
+    margin-top: 0.25rem; 
+}
+
+/* --- Stats Grid --- */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+/* --- Stat Card Styling --- */
+.stat-card {
+    position: relative; /* Needed for the background icon */
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+    padding: 1.5rem;
+    overflow: hidden; /* Keeps the icon contained */
+    transition: all 0.2s ease-in-out;
+}
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+    border-color: #dee2e6;
+}
+.stat-label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+.stat-value {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #212529;
+    line-height: 1;
+}
+.stat-icon {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    opacity: 0.1;
+    transform: rotate(-15deg);
+    --sds-c-icon-color-foreground-default: #000;
+}
+
+/* --- Spotlight List --- */
+.spotlight-list {
+    margin-top: 2.5rem;
+    background-color: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+}
+.spotlight-item {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+}
+.spotlight-item:not(:last-child) {
+    border-bottom: 1px solid #e9ecef;
+}
+.spotlight-icon-wrapper {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    --sds-c-icon-color-foreground-default: #ffffff;
+}
+.icon-active { 
+    background-color: #16a34a; 
+}
+.icon-inactive { 
+    background-color: #ef4444; 
+}
+.spotlight-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+.spotlight-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #212529;
+}
